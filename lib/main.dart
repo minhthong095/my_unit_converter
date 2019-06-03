@@ -9,9 +9,37 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        theme: ThemeData(fontFamily: 'Raleway'),
-        home: SafeArea(
-          child: Backdrop(),
-        ));
+        theme: ThemeData(fontFamily: 'Raleway'), home: ExchangeApp());
+  }
+}
+
+class ExchangeApp extends StatefulWidget {
+  @override
+  _ExchangeAppState createState() => _ExchangeAppState();
+}
+
+class _ExchangeAppState extends State<ExchangeApp> {
+  bool _panelVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Backdrop(
+        panelTitle: 'Unit Converter',
+        backdropTitle: 'Select a Category',
+        panelVisible: _panelVisible,
+        backdrop: ListConverter(
+          onItemTap: _onItemTap,
+        ),
+        panel: Converter(),
+      ),
+    );
+  }
+
+  void _onItemTap() {
+    // Clicking Item will always trigger Panel visible.
+    setState(() {
+      _panelVisible = true;
+    });
   }
 }

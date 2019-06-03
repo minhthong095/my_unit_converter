@@ -3,33 +3,35 @@ import 'package:flutter/material.dart';
 class Converter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.only(top: 30),
-        padding: EdgeInsets.symmetric(horizontal: 30),
-        child: Column(
-          children: <Widget>[
-            InputOutputForm.input(),
-            SizedBox(
-              height: 20,
-            ),
-            DropDownForm(),
-            SizedBox(
-              height: 40,
-            ),
-            Image.asset(
-              'assets/images/arrow.png',
-              scale: 9,
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            InputOutputForm.output(),
-            SizedBox(
-              height: 20,
-            ),
-            DropDownForm(),
-          ],
+    return Container(
+      child: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(top: 30),
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: <Widget>[
+              InputOutputForm.input(),
+              SizedBox(
+                height: 20,
+              ),
+              DropDownForm(),
+              SizedBox(
+                height: 40,
+              ),
+              Image.asset(
+                'assets/images/arrow.png',
+                scale: 12,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              InputOutputForm.output(),
+              SizedBox(
+                height: 20,
+              ),
+              DropDownForm(),
+            ],
+          ),
         ),
       ),
     );
