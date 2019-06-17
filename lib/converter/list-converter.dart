@@ -1,52 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class ListConverter extends StatefulWidget {
-  final VoidCallback onItemTap;
+  final List<DataItemConverter> data;
+  final int defaultIndex;
+  final Function onItemTap;
 
-  const ListConverter({this.onItemTap});
+  const ListConverter(
+      {@required this.data, this.defaultIndex = 0, this.onItemTap});
 
   @override
   _ListConverterState createState() => _ListConverterState();
 }
 
 class _ListConverterState extends State<ListConverter> {
-  final _data = <DataItemConverter>[
-    DataItemConverter(
-        title: 'Area', iconPath: 'assets/icons/area.png', color: Colors.blue),
-    DataItemConverter(
-        title: 'Currency',
-        iconPath: 'assets/icons/currency.png',
-        color: Colors.pink),
-    DataItemConverter(
-        title: 'Length',
-        iconPath: 'assets/icons/length.png',
-        color: Colors.greenAccent),
-    DataItemConverter(
-        title: 'Mass', iconPath: 'assets/icons/mass.png', color: Colors.green),
-    DataItemConverter(
-        title: 'Power',
-        iconPath: 'assets/icons/power.png',
-        color: Colors.indigo),
-    DataItemConverter(
-        title: 'Time', iconPath: 'assets/icons/time.png', color: Colors.lime),
-    DataItemConverter(
-        title: 'Volume',
-        iconPath: 'assets/icons/volume.png',
-        color: Colors.orange),
-  ];
-
   DataItemConverter _currentConverter;
 
   @override
-  void initState() {
-    super.initState();
-    _currentConverter = _data[0];
-  }
-
-  @override
-  void didUpdateWidget(ListConverter oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    print('listconverter didUpdate');
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    _currentConverter = widget.data[widget.defaultIndex];
   }
 
   @override
@@ -55,16 +29,15 @@ class _ListConverterState extends State<ListConverter> {
       backgroundColor: _currentConverter.color,
       body: ListView.builder(
           padding: EdgeInsets.only(bottom: 40),
-          itemCount: _data.length,
+          itemCount: widget.data.length,
           itemBuilder: (context, index) => InkWell(
                 onTap: () {
-                  print('OIT InkWell');
-                  widget.onItemTap();
+                  widget.onItemTap(index);
                   setState(() {
-                    _currentConverter = _data[index];
+                    _currentConverter = widget.data[index];
                   });
                 },
-                child: ItemConverter(data: _data[index]),
+                child: ItemConverter(data: widget.data[index]),
               )),
     );
   }

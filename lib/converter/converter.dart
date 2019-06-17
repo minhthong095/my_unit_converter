@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
-class Converter extends StatelessWidget {
+// Formula: (mile(nhap) / mile(goc)) * yard(goc) = yard(xuat)
+
+class Converter extends StatefulWidget {
+  final List unit;
+
+  const Converter({@required this.unit});
+
+  @override
+  _ConverterState createState() => _ConverterState();
+}
+
+class _ConverterState extends State<Converter> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,7 +25,9 @@ class Converter extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              DropDownForm(),
+              DropDownForm(
+                data: widget.unit,
+              ),
               SizedBox(
                 height: 40,
               ),
@@ -29,7 +42,9 @@ class Converter extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              DropDownForm(),
+              DropDownForm(
+                data: widget.unit,
+              ),
             ],
           ),
         ),
@@ -66,6 +81,10 @@ class InputOutputForm extends StatelessWidget {
 }
 
 class DropDownForm extends StatelessWidget {
+  final List data;
+
+  const DropDownForm({@required this.data});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,8 +98,7 @@ class DropDownForm extends StatelessWidget {
               hint: Text('Choose'),
               onChanged: (_) {},
               value: 'None',
-              items: <String>['None', 'Chocolate', 'Vanilla', 'ButterCream']
-                  .map((String value) {
+              items: this.data.map((dynamic value) {
                 return DropdownMenuItem<String>(
                     value: value,
                     child: Text(

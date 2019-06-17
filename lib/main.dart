@@ -1,3 +1,5 @@
+import 'dart:convert' as prefix0;
+
 import 'package:flutter/material.dart';
 import 'package:my_unit_converter/backdrop/backdrop.dart';
 import 'package:my_unit_converter/converter/converter.dart';
@@ -21,24 +23,67 @@ class ExchangeApp extends StatefulWidget {
 class _ExchangeAppState extends State<ExchangeApp> {
   bool _panelVisible = false;
 
+  final _data = <DataItemConverter>[
+    DataItemConverter(
+        title: 'Area', iconPath: 'assets/icons/area.png', color: Colors.blue),
+    DataItemConverter(
+        title: 'Length',
+        iconPath: 'assets/icons/length.png',
+        color: Colors.greenAccent),
+    DataItemConverter(
+        title: 'Mass', iconPath: 'assets/icons/mass.png', color: Colors.green),
+    DataItemConverter(
+        title: 'Power',
+        iconPath: 'assets/icons/power.png',
+        color: Colors.indigo),
+    DataItemConverter(
+        title: 'Time', iconPath: 'assets/icons/time.png', color: Colors.lime),
+    DataItemConverter(
+        title: 'Volume',
+        iconPath: 'assets/icons/volume.png',
+        color: Colors.orange),
+  ];
+
+  int _currentDataIndex = 0;
+  Map _unit;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Backdrop(
-        panelTitle: 'Unit Converter',
-        backdropTitle: 'Select a Category',
-        panelVisible: _panelVisible,
-        backdrop: ListConverter(
-          onItemTap: _onItemTap,
-        ),
-        panel: Converter(),
-      ),
+    return FutureBuilder(
+      future: DefaultAssetBundle.of(context)
+          .loadString('assets/converter/regular_units.json'),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (_unit == null) {
+            _unit = prefix0.JsonDecoder().convert(snapshot.data)
+          }
+          final b = _unit;
+          return SafeArea(
+            child: Backdrop(
+              panelTitle: 'Unit Converter',
+              backdropTitle: 'Select a Category',
+              backTitleColor: _data[_currentDataIndex].color,
+              panelVisible: _panelVisible,
+              backdrop: ListConverter(
+                data: _data,
+                defaultIndex: _currentDataIndex,
+                onItemTap: _onItemTap,
+              ),
+              panel: Converter(
+                unit: _unit[_data[_currentDataIndex].title],
+              ),
+            ),
+          );
+        }
+        return Container(height: 0, width: 0);
+      },
     );
   }
 
-  void _onItemTap() {
+  void _onItemTap(int index) {
     // Clicking Item will always trigger Panel visible.
     setState(() {
+      _currentDataIndex = index;
       _panelVisible = true;
     });
   }

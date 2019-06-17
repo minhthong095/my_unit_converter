@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_unit_converter/converter/converter.dart';
-import 'dart:math' as math;
 
 class Backdrop extends StatefulWidget {
   final Widget backdrop;
@@ -8,12 +6,14 @@ class Backdrop extends StatefulWidget {
   final bool panelVisible;
   final String backdropTitle;
   final String panelTitle;
+  final Color backTitleColor;
 
   const Backdrop(
       {@required this.backdrop,
       @required this.panel,
       @required this.backdropTitle,
       @required this.panelTitle,
+      @required this.backTitleColor,
       this.panelVisible = true});
 
   @override
@@ -36,7 +36,7 @@ class _BackdropState extends State<Backdrop>
     _controller = AnimationController(
         value: widget.panelVisible ? 0 : 1,
         vsync: this,
-        duration: Duration(seconds: 5));
+        duration: Duration(seconds: 1));
   }
 
   @override
@@ -55,13 +55,16 @@ class _BackdropState extends State<Backdrop>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
-              onPressed: _toggleAppBarBtn,
-              icon: AnimatedIcon(
-                icon: AnimatedIcons.menu_close,
-                progress: _controller,
-              )),
-          title: _buildTitle()),
+        elevation: 0,
+        leading: IconButton(
+            onPressed: _toggleAppBarBtn,
+            icon: AnimatedIcon(
+              icon: AnimatedIcons.menu_close,
+              progress: _controller,
+            )),
+        title: _buildBackTitle(),
+        backgroundColor: widget.backTitleColor,
+      ),
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           _anmiationPanel
@@ -83,14 +86,14 @@ class _BackdropState extends State<Backdrop>
   }
 
   void _toggleAppBarBtn() {
-    // if (_controller.status == AnimationStatus.dismissed) // at begining
-    //   _controller.fling(velocity: 1);
-    // else
-    //   _controller.fling(velocity: -1);
     if (_controller.status == AnimationStatus.dismissed) // at begining
-      _controller.animateTo(1);
+      _controller.fling(velocity: 1);
     else
-      _controller.animateBack(0);
+      _controller.fling(velocity: -1);
+    // if (_controller.status == AnimationStatus.dismissed) // at begining
+    //   _controller.animateTo(1);
+    // else
+    //   _controller.animateBack(0);
   }
 
   Widget _buildPanelTitle() => InkWell(
@@ -117,14 +120,14 @@ class _BackdropState extends State<Backdrop>
                 height: _dividerHeight,
               ),
               Expanded(
-                child: Converter(),
+                child: widget.panel,
               )
             ],
           ),
         ),
       );
 
-  AnimatedWidget _buildTitle() {
+  AnimatedWidget _buildBackTitle() {
     return AnimatedBuilder(
       builder: (context, child) => Stack(
             children: <Widget>[
@@ -144,48 +147,6 @@ class _BackdropState extends State<Backdrop>
             ],
           ),
       animation: _controller,
-    );
-  }
-}
-
-class _BackdropTitle extends AnimatedWidget {
-  final Widget frontTitle;
-  final Widget backTitle;
-
-  const _BackdropTitle({
-    Key key,
-    Listenable listenable,
-    this.frontTitle,
-    this.backTitle,
-  }) : super(key: key, listenable: listenable);
-
-  @override
-  Widget build(BuildContext context) {
-    final Animation<double> animation = this.listenable;
-    return DefaultTextStyle(
-      style: Theme.of(context).primaryTextTheme.title,
-      softWrap: true,
-      overflow: TextOverflow.ellipsis,
-      // Here, we do a custom cross fade between backTitle and frontTitle.
-      // This makes a smooth animation between the two texts.
-      child: Stack(
-        children: <Widget>[
-          Opacity(
-            opacity: CurvedAnimation(
-              parent: ReverseAnimation(animation),
-              curve: Interval(0.5, 1.0),
-            ).value,
-            child: backTitle,
-          ),
-          Opacity(
-            opacity: CurvedAnimation(
-              parent: animation,
-              curve: Interval(0.5, 1.0),
-            ).value,
-            child: frontTitle,
-          ),
-        ],
-      ),
     );
   }
 }
