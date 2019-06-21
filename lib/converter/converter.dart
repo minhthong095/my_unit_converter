@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-// Formula: (mile(nhap) / mile(goc)) * yard(goc) = yard(xuat)
+// Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
 
 class Converter extends StatefulWidget {
   final List unit;
@@ -97,12 +97,12 @@ class DropDownForm extends StatelessWidget {
           child: DropdownButton<String>(
               hint: Text('Choose'),
               onChanged: (_) {},
-              value: 'None',
-              items: this.data.map((dynamic value) {
+              value: this.data[0]['name'],
+              items: this.data.map((value) {
                 return DropdownMenuItem<String>(
-                    value: value,
+                    value: value['name'],
                     child: Text(
-                      value,
+                      value['name'],
                       style: TextStyle(fontSize: 24),
                     ));
               }).toList()),

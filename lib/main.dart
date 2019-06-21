@@ -54,10 +54,9 @@ class _ExchangeAppState extends State<ExchangeApp> {
           .loadString('assets/converter/regular_units.json'),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (_unit == null) {
-            _unit = prefix0.JsonDecoder().convert(snapshot.data)
-          }
-          final b = _unit;
+          if (_unit == null)
+            _unit = prefix0.JsonDecoder().convert(snapshot.data);
+
           return SafeArea(
             child: Backdrop(
               panelTitle: 'Unit Converter',
