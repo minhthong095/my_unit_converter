@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
@@ -12,6 +14,14 @@ class Converter extends StatefulWidget {
 }
 
 class _ConverterState extends State<Converter> {
+  final _inputStream = StreamController<String>();
+
+  @override
+  void dispose() {
+    _inputStream.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,7 +31,10 @@ class _ConverterState extends State<Converter> {
           padding: EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             children: <Widget>[
-              InputOutputForm.input(),
+              InputOutputForm(
+                title: 'Input',
+                inputStream: _inputStream,
+              ),
               SizedBox(
                 height: 20,
               ),
@@ -38,7 +51,7 @@ class _ConverterState extends State<Converter> {
               SizedBox(
                 height: 40,
               ),
-              InputOutputForm.output(),
+              InputOutputForm(title: 'Output', newInputStream: _inputStream),
               SizedBox(
                 height: 20,
               ),
@@ -53,20 +66,52 @@ class _ConverterState extends State<Converter> {
   }
 }
 
-class InputOutputForm extends StatelessWidget {
-  final String _title;
+class InputOutputForm extends StatefulWidget {
+  final String title;
+  final String newInput;
+  final StreamController<String> inputStream;
+  final StreamController<String> newInputStream;
 
-  const InputOutputForm.output() : _title = 'Output';
-  const InputOutputForm.input() : _title = 'Input';
+  const InputOutputForm(
+      {@required this.title,
+      this.newInput,
+      this.newInputStream,
+      this.inputStream});
+
+  @override
+  _InputOutputFormState createState() => _InputOutputFormState();
+}
+
+class _InputOutputFormState extends State<InputOutputForm> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.newInputStream != null)
+      widget.newInputStream.stream.listen((onData) {
+        _controller.text = onData;
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: TextField(
+        controller: _controller,
         style: TextStyle(fontSize: 30, color: Colors.black38),
+        onChanged: (value) {
+          widget.inputStream.add(value);
+        },
         decoration: InputDecoration(
             labelStyle: TextStyle(fontSize: 30, color: Colors.black38),
-            labelText: _title,
+            labelText: widget.title,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(0),
             ),
