@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert' as prefix0;
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:my_unit_converter/backdrop/backdrop.dart';
 import 'package:my_unit_converter/converter/converter.dart';
@@ -7,12 +9,81 @@ import 'package:my_unit_converter/converter/list-converter.dart';
 
 void main() => runApp(new MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _controllerDouble = StreamController<double>();
+  final _controllerString = StreamController<String>();
+
+  @override
+  void initState() {
+    StreamGroup.merge([_controllerDouble.stream, _controllerString.stream])
+        .listen((onData) {
+      print(onData);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        theme: ThemeData(fontFamily: 'Raleway'), home: ExchangeApp());
+    return MaterialApp(
+        home: Scaffold(
+      body: Column(
+        children: <Widget>[
+          InkWell(
+            onTap: () {
+              _controllerDouble.add(1);
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              color: Colors.red,
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              _controllerString.add("String");
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              color: Colors.blue,
+            ),
+          )
+        ],
+      ),
+    ));
   }
+
+  // Column(
+  //       children: <Widget>[
+  //         InkWell(
+  //           onTap: () {},
+  //           child: Container(
+  //             width: 100,
+  //             height: 100,
+  //             color: Colors.red,
+  //           ),
+  //         ),
+  //         InkWell(
+  //           onTap: () {},
+  //           child: Container(
+  //             width: 100,
+  //             height: 100,
+  //             color: Colors.blue,
+  //           ),
+  //         )
+  //       ],
+  //     ),
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return new MaterialApp(
+  //       theme: ThemeData(fontFamily: 'Raleway'), home: ExchangeApp());
+  // }
 }
 
 class ExchangeApp extends StatefulWidget {
