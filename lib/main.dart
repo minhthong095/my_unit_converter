@@ -2,6 +2,7 @@ import 'dart:convert' as prefix0;
 
 import 'package:flutter/material.dart';
 import 'package:my_unit_converter/backdrop/backdrop.dart';
+import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
 import 'package:my_unit_converter/converter/converter.dart';
 import 'package:my_unit_converter/list-converter/list-converter.dart';
 
@@ -45,7 +46,7 @@ class _ExchangeAppState extends State<ExchangeApp> {
   ];
 
   int _currentDataIndex = 0;
-  Map _unit;
+  Map<String, List<ModelConversion>> _unit;
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +55,17 @@ class _ExchangeAppState extends State<ExchangeApp> {
           .loadString('assets/converter/regular_units.json'),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          if (_unit == null)
-            _unit = prefix0.JsonDecoder().convert(snapshot.data);
-
+          if (_unit == null) {
+            _unit = (prefix0.JsonDecoder().convert(snapshot.data) as Map)
+                .map((k, b) {
+              final List<ModelConversion> listConversion = List.from((b as List)
+                  .map((conversion) => ModelConversion(
+                      conversion["name"],
+                      conversion["conversion"],
+                      conversion["base_unit"] == null ? false : true)));
+              return MapEntry(k, listConversion);
+            });
+          }
           return SafeArea(
             child: Backdrop(
               panelTitle: 'Unit Converter',
@@ -68,9 +77,7 @@ class _ExchangeAppState extends State<ExchangeApp> {
                 defaultIndex: _currentDataIndex,
                 onItemTap: _onItemTap,
               ),
-              panel: Converter(
-                unit: _unit[_data[_currentDataIndex].title],
-              ),
+              panel: Converter(unit: _unit[_data[_currentDataIndex].title]),
             ),
           );
         }
