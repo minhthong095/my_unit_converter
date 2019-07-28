@@ -1,17 +1,14 @@
-import 'dart:async';
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/converter/bloc/bloc-converter.dart';
 import 'package:my_unit_converter/converter/bloc/event-converter.dart';
 import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
-
-// Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
+import 'package:my_unit_converter/converter/bloc/state-converter.dart';
 
 class Converter extends StatefulWidget {
-  final List<ModelConversion> unit;
+  final List<ModelConversion> units;
 
-  const Converter({@required this.unit});
+  const Converter({@required this.units});
 
   @override
   _ConverterState createState() => _ConverterState();
@@ -35,7 +32,7 @@ class _ConverterState extends State<Converter> {
                 SizedBox(
                   height: 20,
                 ),
-                _DropDownForm(data: widget.unit),
+                _DropDownForm(data: widget.units),
                 SizedBox(
                   height: 40,
                 ),
@@ -46,15 +43,21 @@ class _ConverterState extends State<Converter> {
                 SizedBox(
                   height: 40,
                 ),
-                _InputOutputForm(
-                  title: 'Output',
-                  enabledField: false,
+                BlocBuilder<BlocConverter, StateConverter>(
+                  builder: (context, state) {
+                    print("HIT ME HARDER");
+                    return _InputOutputForm(
+                        title: 'Output',
+                        enabledField: false,
+                        newInput: state.outcome);
+                  },
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 _DropDownForm(
-                  data: widget.unit,
+                  bSide: true,
+                  data: widget.units,
                 ),
               ],
             ),
@@ -67,59 +70,65 @@ class _ConverterState extends State<Converter> {
 
 class _DropDownForm extends StatefulWidget {
   final List<ModelConversion> data;
-  final StreamController<double> chooseUnitStreamA;
-  final StreamController<double> chooseUnitStreamB;
-  final StreamController<double> inOutStream;
+  final bool bSide;
 
-  const _DropDownForm(
-      {@required this.data,
-      this.chooseUnitStreamA,
-      this.chooseUnitStreamB,
-      this.inOutStream});
+  const _DropDownForm({@required this.data, this.bSide = false});
 
   @override
   _DropDownFormState createState() => _DropDownFormState();
 }
 
 class _DropDownFormState extends State<_DropDownForm> {
+  BlocConverter blocConverter;
+
+  final int defaultIndex = 0;
+
   @override
   void initState() {
-    // if (widget.ch  ooseUnitStreamB != null)
-    //   widget.chooseUnitStreamB.stream.listen((onData) {
-    //     print('OnData ' + onData.toString());
-    //   });
-    if (widget.inOutStream != null && widget.chooseUnitStreamB != null) {
-      StreamGroup.merge(
-              [widget.inOutStream.stream, widget.chooseUnitStreamB.stream])
-          .asBroadcastStream(onListen: (listen) {});
-    }
+    blocConverter = BlocProvider.of<BlocConverter>(context);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        height: 60,
-        padding: EdgeInsets.symmetric(horizontal: 12),
-        decoration:
-            BoxDecoration(border: Border.all(width: 1, color: Colors.black38)),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<double>(
-              hint: Text('Choose'),
-              onChanged: (double conversion) {
-                widget.chooseUnitStreamA.add(conversion);
-              },
-              value: widget.data[0].conversion,
-              items: widget.data.map((value) {
-                return DropdownMenuItem<double>(
-                    value: value.conversion,
-                    child: Text(
-                      value.name,
-                      style: TextStyle(fontSize: 24),
-                    ));
-              }).toList()),
-        ));
+    // Init default selected input/output type.
+    blocConverter.dispatch(InitTypes(
+        inputConversion: widget.data[defaultIndex],
+        outputConversion: widget.data[defaultIndex]));
+
+    return BlocBuilder<BlocConverter, StateConverter>(
+      builder: (context, state) {
+        return Container(
+            width: double.infinity,
+            height: 60,
+            padding: EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.black38)),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<ModelConversion>(
+                  hint: Text('Choose'),
+                  onChanged: (ModelConversion conversion) {
+                    widget.bSide
+                        ? blocConverter.dispatch(
+                            UpdateOutputType(outputConversion: conversion))
+                        : blocConverter.dispatch(
+                            UpdateInputType(inputConversion: conversion));
+                  },
+                  value: widget.bSide
+                      ? state.converter.conversionTo
+                      : state.converter.conversionFrom,
+                  items: widget.data.map((value) {
+                    return DropdownMenuItem<ModelConversion>(
+                        value: value,
+                        child: Text(
+                          value.name,
+                          style: TextStyle(fontSize: 24),
+                        ));
+                  }).toList()),
+            ));
+      },
+    );
   }
 }
 
@@ -137,6 +146,13 @@ class _InputOutputForm extends StatefulWidget {
 
 class _InputOutputFormState extends State<_InputOutputForm> {
   final _controller = TextEditingController();
+  BlocConverter blocConverter;
+
+  @override
+  void didUpdateWidget(_InputOutputForm oldWidget) {
+    _controller.text = widget.newInput;
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   void dispose() {
@@ -145,16 +161,20 @@ class _InputOutputFormState extends State<_InputOutputForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final BlocConverter blocConverter = BlocProvider.of<BlocConverter>(context);
+  void initState() {
+    super.initState();
+    blocConverter = BlocProvider.of<BlocConverter>(context);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: TextField(
         enabled: widget.enabledField,
         controller: _controller,
         style: TextStyle(fontSize: 30, color: Colors.black38),
         onChanged: (value) {
-          blocConverter.dispatch(EventConverterTest());
+          blocConverter.dispatch(UpdateInput(newInput: value));
         },
         decoration: InputDecoration(
             labelStyle: TextStyle(fontSize: 30, color: Colors.black38),

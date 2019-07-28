@@ -1,9 +1,29 @@
-abstract class EventConverter {}
+import 'package:flutter/foundation.dart';
+import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
 
-class UpdateInput extends EventConverter {}
+abstract class EventConverter {
+  const EventConverter();
+}
 
-class UpdateInputType extends EventConverter {}
+class UpdateInput extends EventConverter {
+  final String newInput;
+  const UpdateInput({@required this.newInput}) : super();
+}
 
-class UpdateOutputType extends EventConverter {}
+class UpdateInputType extends EventConverter {
+  final ModelConversion inputConversion;
+  const UpdateInputType({@required this.inputConversion}) : super();
+}
 
-class EventConverterTest extends EventConverter {}
+class UpdateOutputType extends EventConverter {
+  final ModelConversion outputConversion;
+  const UpdateOutputType({@required this.outputConversion}) : super();
+}
+
+class InitTypes extends EventConverter {
+  final ModelConversion outputConversion;
+  final ModelConversion inputConversion;
+  const InitTypes(
+      {@required this.outputConversion, @required this.inputConversion})
+      : super();
+}

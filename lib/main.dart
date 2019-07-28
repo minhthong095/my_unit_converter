@@ -77,7 +77,7 @@ class _ExchangeAppState extends State<ExchangeApp> {
                 defaultIndex: _currentDataIndex,
                 onItemTap: _onItemTap,
               ),
-              panel: Converter(unit: _unit[_data[_currentDataIndex].title]),
+              panel: Converter(units: _unit[_data[_currentDataIndex].title]),
             ),
           );
         }

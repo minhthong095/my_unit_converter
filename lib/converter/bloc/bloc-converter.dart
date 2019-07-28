@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:my_unit_converter/converter/bloc/event-converter.dart';
-import 'package:my_unit_converter/converter/bloc/model-choose-unit.dart';
+import 'package:my_unit_converter/converter/bloc/model-converter.dart';
 import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
 import 'package:my_unit_converter/converter/bloc/state-converter.dart';
 
@@ -10,15 +10,38 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
-    if (event is EventConverterTest) {
-      print("BLAME IT ON ME");
-      return;
+    // Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
+    final currentConverter = currentState.converter;
+    String input = currentConverter.valueInput;
+    ModelConversion unitFrom = currentConverter.conversionFrom;
+    ModelConversion unitTo = currentConverter.conversionTo;
+
+    if (event is UpdateInput)
+      input = event.newInput;
+    else if (event is UpdateInputType)
+      unitFrom = event.inputConversion;
+    else if (event is UpdateOutputType)
+      unitFrom = event.outputConversion;
+    else if (event is InitTypes) {
+      unitFrom = event.inputConversion;
+      unitTo = event.outputConversion;
     }
-    if (event is UpdateInput) {
-      yield ConverterUpdated(
-          chooseUnit: ModelChooseUnit(123, ModelConversion("123", 1, false),
-              ModelConversion("123", 123, false)));
-      return;
-    }
+
+    yield ConverterUpdated(
+        outcome: input != ""
+            ? calculateOutcome(double.parse(input), unitFrom, unitTo)
+            : input,
+        converter: ModelConverter(input, unitFrom, unitTo));
   }
+
+  String calculateOutcome(
+      double input, ModelConversion inputType, ModelConversion outputType) {
+    final double outcomeValue =
+        (input / inputType.conversion) * outputType.conversion;
+    return isDecimal(outcomeValue)
+        ? outcomeValue.toString()
+        : outcomeValue.round().toString();
+  }
+
+  bool isDecimal(double value) => value % value.round() != 0;
 }
