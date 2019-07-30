@@ -21,9 +21,12 @@ class UpdateOutputType extends EventConverter {
 }
 
 class InitTypes extends EventConverter {
+  final String newInput;
   final ModelConversion outputConversion;
   final ModelConversion inputConversion;
   const InitTypes(
-      {@required this.outputConversion, @required this.inputConversion})
+      {@required this.outputConversion,
+      @required this.inputConversion,
+      @required this.newInput})
       : super();
 }

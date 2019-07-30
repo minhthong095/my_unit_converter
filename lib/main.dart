@@ -1,7 +1,10 @@
 import 'dart:convert' as prefix0;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/backdrop/backdrop.dart';
+import 'package:my_unit_converter/converter/bloc/bloc-converter.dart';
+import 'package:my_unit_converter/converter/bloc/event-converter.dart';
 import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
 import 'package:my_unit_converter/converter/converter.dart';
 import 'package:my_unit_converter/list-converter/list-converter.dart';
@@ -12,7 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        theme: ThemeData(fontFamily: 'Raleway'), home: ExchangeApp());
+        theme: ThemeData(fontFamily: 'Raleway'),
+        home: BlocProvider<BlocConverter>(
+          builder: (context) => BlocConverter(),
+          child: ExchangeApp(),
+        ));
   }
 }
 
@@ -22,8 +29,6 @@ class ExchangeApp extends StatefulWidget {
 }
 
 class _ExchangeAppState extends State<ExchangeApp> {
-  bool _panelVisible = false;
-
   final _data = <DataItemConverter>[
     DataItemConverter(
         title: 'Area', iconPath: 'assets/icons/area.png', color: Colors.blue),
@@ -34,8 +39,8 @@ class _ExchangeAppState extends State<ExchangeApp> {
     DataItemConverter(
         title: 'Mass', iconPath: 'assets/icons/mass.png', color: Colors.green),
     DataItemConverter(
-        title: 'Power',
-        iconPath: 'assets/icons/power.png',
+        title: 'Digital Storage',
+        iconPath: 'assets/icons/digital_storage.png',
         color: Colors.indigo),
     DataItemConverter(
         title: 'Time', iconPath: 'assets/icons/time.png', color: Colors.lime),
@@ -45,11 +50,23 @@ class _ExchangeAppState extends State<ExchangeApp> {
         color: Colors.orange),
   ];
 
+  bool _panelVisible = false;
   int _currentDataIndex = 0;
   Map<String, List<ModelConversion>> _unit;
+  BlocConverter blocConverter;
+
+  @override
+  void initState() {
+    blocConverter = BlocProvider.of<BlocConverter>(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    try {
+      final e = _unit[_data[_currentDataIndex].title];
+      print('Converter current index ' + _currentDataIndex.toString());
+    } catch (error) {}
     return FutureBuilder(
       future: DefaultAssetBundle.of(context)
           .loadString('assets/converter/regular_units.json'),
@@ -87,6 +104,11 @@ class _ExchangeAppState extends State<ExchangeApp> {
   }
 
   void _onItemTap(int index) {
+    final defaultConversion = _unit[_data[index].title][0];
+    blocConverter.dispatch(InitTypes(
+        newInput: "",
+        inputConversion: defaultConversion,
+        outputConversion: defaultConversion));
     // Clicking Item will always trigger Panel visible.
     setState(() {
       _currentDataIndex = index;

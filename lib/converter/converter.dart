@@ -17,50 +17,47 @@ class Converter extends StatefulWidget {
 class _ConverterState extends State<Converter> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      builder: (context) => BlocConverter(),
-      child: Container(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.only(top: 30),
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: <Widget>[
-                _InputOutputForm(
-                  title: 'Input',
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                _DropDownForm(data: widget.units),
-                SizedBox(
-                  height: 40,
-                ),
-                Image.asset(
-                  'assets/images/arrow.png',
-                  scale: 12,
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                BlocBuilder<BlocConverter, StateConverter>(
-                  builder: (context, state) {
-                    print("HIT ME HARDER");
-                    return _InputOutputForm(
-                        title: 'Output',
-                        enabledField: false,
-                        newInput: state.outcome);
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                _DropDownForm(
-                  bSide: true,
-                  data: widget.units,
-                ),
-              ],
-            ),
+    return Container(
+      child: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(top: 30),
+          padding: EdgeInsets.symmetric(horizontal: 30),
+          child: Column(
+            children: <Widget>[
+              _InputOutputForm(
+                title: 'Input',
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              _DropDownForm(data: widget.units),
+              SizedBox(
+                height: 40,
+              ),
+              Image.asset(
+                'assets/images/arrow.png',
+                scale: 12,
+              ),
+              SizedBox(
+                height: 40,
+              ),
+              BlocBuilder<BlocConverter, StateConverter>(
+                builder: (context, state) {
+                  print('state Output ' + state.toString());
+                  return _InputOutputForm(
+                      title: 'Output',
+                      enabledField: false,
+                      newInput: state.outcome);
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              _DropDownForm(
+                bSide: true,
+                data: widget.units,
+              ),
+            ],
           ),
         ),
       ),
@@ -81,24 +78,17 @@ class _DropDownForm extends StatefulWidget {
 class _DropDownFormState extends State<_DropDownForm> {
   BlocConverter blocConverter;
 
-  final int defaultIndex = 0;
-
   @override
   void initState() {
     blocConverter = BlocProvider.of<BlocConverter>(context);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Init default selected input/output type.
-    blocConverter.dispatch(InitTypes(
-        inputConversion: widget.data[defaultIndex],
-        outputConversion: widget.data[defaultIndex]));
-
     return BlocBuilder<BlocConverter, StateConverter>(
       builder: (context, state) {
+        print('state DropDownForm ' + state.toString());
         return Container(
             width: double.infinity,
             height: 60,
