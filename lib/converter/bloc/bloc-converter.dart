@@ -21,7 +21,7 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
     else if (event is UpdateInputType)
       unitFrom = event.inputConversion;
     else if (event is UpdateOutputType)
-      unitFrom = event.outputConversion;
+      unitTo = event.outputConversion;
     else if (event is InitTypes) {
       input = event.newInput;
       unitFrom = event.inputConversion;

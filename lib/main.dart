@@ -63,10 +63,7 @@ class _ExchangeAppState extends State<ExchangeApp> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      final e = _unit[_data[_currentDataIndex].title];
-      print('Converter current index ' + _currentDataIndex.toString());
-    } catch (error) {}
+    try {} catch (error) {}
     return FutureBuilder(
       future: DefaultAssetBundle.of(context)
           .loadString('assets/converter/regular_units.json'),
@@ -82,6 +79,7 @@ class _ExchangeAppState extends State<ExchangeApp> {
                       conversion["base_unit"] == null ? false : true)));
               return MapEntry(k, listConversion);
             });
+            _initConverterState(0);
           }
           return SafeArea(
             child: Backdrop(
@@ -104,15 +102,19 @@ class _ExchangeAppState extends State<ExchangeApp> {
   }
 
   void _onItemTap(int index) {
-    final defaultConversion = _unit[_data[index].title][0];
-    blocConverter.dispatch(InitTypes(
-        newInput: "",
-        inputConversion: defaultConversion,
-        outputConversion: defaultConversion));
+    _initConverterState(index);
     // Clicking Item will always trigger Panel visible.
     setState(() {
       _currentDataIndex = index;
       _panelVisible = true;
     });
+  }
+
+  void _initConverterState(int index) {
+    final defaultConversion = _unit[_data[index].title][0];
+    blocConverter.dispatch(InitTypes(
+        newInput: "",
+        inputConversion: defaultConversion,
+        outputConversion: defaultConversion));
   }
 }
