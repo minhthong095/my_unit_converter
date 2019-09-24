@@ -63,7 +63,6 @@ class _ExchangeAppState extends State<ExchangeApp> {
 
   @override
   Widget build(BuildContext context) {
-    try {} catch (error) {}
     return FutureBuilder(
       future: DefaultAssetBundle.of(context)
           .loadString('assets/converter/regular_units.json'),
@@ -81,19 +80,23 @@ class _ExchangeAppState extends State<ExchangeApp> {
             });
             _initConverterState(0);
           }
-          return SafeArea(
-            child: Backdrop(
-              backdropTitlePanelOn: 'Unit Converter',
-              backdropTitlePanelOff: 'Select a Category',
-              backTitleColor: _data[_currentDataIndex].color,
-              panelTitle: _data[_currentDataIndex].title,
-              panelVisible: _panelVisible,
-              backdrop: ListConverter(
-                data: _data,
-                defaultIndex: _currentDataIndex,
-                onItemTap: _onItemTap,
+          return Container(
+            color: Colors.white,
+            child: SafeArea(
+              top: false,
+              child: Backdrop(
+                backdropTitlePanelOn: 'Unit Converter',
+                backdropTitlePanelOff: 'Select a Category',
+                backTitleColor: _data[_currentDataIndex].color,
+                panelTitle: _data[_currentDataIndex].title,
+                panelVisible: _panelVisible,
+                backdrop: ListConverter(
+                  data: _data,
+                  defaultIndex: _currentDataIndex,
+                  onItemTap: _onItemTap,
+                ),
+                panel: Converter(units: _unit[_data[_currentDataIndex].title]),
               ),
-              panel: Converter(units: _unit[_data[_currentDataIndex].title]),
             ),
           );
         }
