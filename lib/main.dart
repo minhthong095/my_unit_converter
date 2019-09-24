@@ -83,9 +83,10 @@ class _ExchangeAppState extends State<ExchangeApp> {
           }
           return SafeArea(
             child: Backdrop(
-              panelTitle: 'Unit Converter',
-              backdropTitle: 'Select a Category',
+              backdropTitlePanelOn: 'Unit Converter',
+              backdropTitlePanelOff: 'Select a Category',
               backTitleColor: _data[_currentDataIndex].color,
+              panelTitle: _data[_currentDataIndex].title,
               panelVisible: _panelVisible,
               backdrop: ListConverter(
                 data: _data,

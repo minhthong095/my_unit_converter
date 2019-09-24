@@ -4,15 +4,17 @@ class Backdrop extends StatefulWidget {
   final Widget backdrop;
   final Widget panel;
   final bool panelVisible;
-  final String backdropTitle;
+  final String backdropTitlePanelOff;
+  final String backdropTitlePanelOn;
   final String panelTitle;
   final Color backTitleColor;
 
   const Backdrop(
       {@required this.backdrop,
       @required this.panel,
-      @required this.backdropTitle,
+      @required this.backdropTitlePanelOff,
       @required this.panelTitle,
+      @required this.backdropTitlePanelOn,
       @required this.backTitleColor,
       this.panelVisible = true});
 
@@ -57,7 +59,7 @@ class _BackdropState extends State<Backdrop>
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-            onPressed: _toggleAppBarBtn,
+            onPressed: _toggleHamburgerBtn,
             icon: AnimatedIcon(
               icon: AnimatedIcons.menu_close,
               progress: _controller,
@@ -85,26 +87,22 @@ class _BackdropState extends State<Backdrop>
     }
   }
 
-  void _toggleAppBarBtn() {
+  void _toggleHamburgerBtn() {
     if (_controller.status == AnimationStatus.dismissed) // at begining
       _controller.fling(velocity: 1);
     else
       _controller.fling(velocity: -1);
-    // if (_controller.status == AnimationStatus.dismissed) // at begining
-    //   _controller.animateTo(1);
-    // else
-    //   _controller.animateBack(0);
   }
 
   Widget _buildPanelTitle() => InkWell(
         onTap: () {
-          _toggleAppBarBtn();
+          _toggleHamburgerBtn();
         },
         child: Container(
             padding: EdgeInsets.only(left: 20),
             alignment: Alignment.centerLeft,
             constraints: BoxConstraints.expand(height: _panelTitleHeight),
-            child: Text("Length", style: TextStyle(fontSize: 25))),
+            child: Text(widget.panelTitle, style: TextStyle(fontSize: 25))),
       );
 
   Widget _buildPanel() => PositionedTransition(
@@ -130,22 +128,22 @@ class _BackdropState extends State<Backdrop>
   AnimatedWidget _buildBackTitle() {
     return AnimatedBuilder(
       builder: (context, child) => Stack(
-            children: <Widget>[
-              Opacity(
-                opacity: CurvedAnimation(
-                        parent: ReverseAnimation(_controller),
-                        curve: Interval(0.5, 1))
-                    .value,
-                child: Text(widget.panelTitle),
-              ),
-              Opacity(
-                opacity: CurvedAnimation(
-                        parent: _controller, curve: Interval(0.5, 1))
-                    .value,
-                child: Text(widget.backdropTitle),
-              )
-            ],
+        children: <Widget>[
+          Opacity(
+            opacity: CurvedAnimation(
+                    parent: ReverseAnimation(_controller),
+                    curve: Interval(0.5, 1))
+                .value,
+            child: Text(widget.backdropTitlePanelOn),
           ),
+          Opacity(
+            opacity:
+                CurvedAnimation(parent: _controller, curve: Interval(0.5, 1))
+                    .value,
+            child: Text(widget.backdropTitlePanelOff),
+          )
+        ],
+      ),
       animation: _controller,
     );
   }
