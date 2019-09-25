@@ -60,7 +60,7 @@ class ItemConverter extends StatelessWidget {
           ),
           Text(
             data.title,
-            style: TextStyle(fontSize: 35),
+            style: TextStyle(fontSize: 28),
           ),
         ],
       ),

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
+import 'package:my_unit_converter/converter/bloc/model_conversion.dart';
 
 class ModelConverter extends Equatable {
   final String valueInput;

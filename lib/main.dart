@@ -3,11 +3,11 @@ import 'dart:convert' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/backdrop/backdrop.dart';
-import 'package:my_unit_converter/converter/bloc/bloc-converter.dart';
-import 'package:my_unit_converter/converter/bloc/event-converter.dart';
-import 'package:my_unit_converter/converter/bloc/model-conversion.dart';
+import 'package:my_unit_converter/converter/bloc/bloc_converter.dart';
+import 'package:my_unit_converter/converter/bloc/event_converter.dart';
+import 'package:my_unit_converter/converter/bloc/model_conversion.dart';
 import 'package:my_unit_converter/converter/converter.dart';
-import 'package:my_unit_converter/list-converter/list-converter.dart';
+import 'package:my_unit_converter/list_converter/list_converter.dart';
 
 void main() => runApp(new MyApp());
 
