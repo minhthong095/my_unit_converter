@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:my_unit_converter/converter/bloc/event_converter.dart';
-import 'package:my_unit_converter/converter/bloc/model-converter.dart';
-import 'package:my_unit_converter/converter/bloc/model_conversion.dart';
-import 'package:my_unit_converter/converter/bloc/state_converter.dart';
+import 'package:my_unit_converter/model/model_convert.dart';
+import 'package:my_unit_converter/widget/converter/bloc/event_converter.dart';
+import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
+import 'package:my_unit_converter/widget/converter/bloc/state_converter.dart';
 
 class BlocConverter extends Bloc<EventConverter, StateConverter> {
   @override

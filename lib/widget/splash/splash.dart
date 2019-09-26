@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:my_unit_converter/exchange_app/exchange_app.dart';
+import 'package:my_unit_converter/networking/requesting.dart';
+import 'package:my_unit_converter/widget/exchange_app/exchange_app.dart';
 
 class Splash extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    Requesting.getListBackdrop().then((onValue) {
+      print(onValue.data);
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

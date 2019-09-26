@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:my_unit_converter/converter/bloc/model-converter.dart';
+import 'package:my_unit_converter/model/model_convert.dart';
 
 abstract class StateConverter {
   final ModelConverter converter;

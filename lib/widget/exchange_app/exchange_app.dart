@@ -2,12 +2,12 @@ import 'dart:convert' as prefix0;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_unit_converter/backdrop/backdrop.dart';
-import 'package:my_unit_converter/converter/bloc/bloc_converter.dart';
-import 'package:my_unit_converter/converter/bloc/event_converter.dart';
-import 'package:my_unit_converter/converter/bloc/model_conversion.dart';
-import 'package:my_unit_converter/converter/converter.dart';
-import 'package:my_unit_converter/list_converter/list_converter.dart';
+import 'package:my_unit_converter/widget/backdrop/backdrop.dart';
+import 'package:my_unit_converter/widget/converter/bloc/bloc_converter.dart';
+import 'package:my_unit_converter/widget/converter/bloc/event_converter.dart';
+import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
+import 'package:my_unit_converter/widget/converter/converter.dart';
+import 'package:my_unit_converter/widget/list_converter/list_converter.dart';
 
 class ExchangeApp extends StatelessWidget {
   @override
