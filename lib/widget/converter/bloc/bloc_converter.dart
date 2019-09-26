@@ -10,6 +10,10 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
+    _runModifyThing(event);
+  }
+
+  Stream<ConverterUpdated> _runModifyThing(EventConverter event) async* {
     // Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
     final currentConverter = currentState.converter;
     String input = currentConverter.valueInput;

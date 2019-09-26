@@ -16,17 +16,17 @@ class ExchangeApp extends StatelessWidget {
         theme: ThemeData(fontFamily: 'Raleway'),
         home: BlocProvider<BlocConverter>(
           builder: (context) => BlocConverter(),
-          child: _ExchangeApp(),
+          child: $ExchangeApp(),
         ));
   }
 }
 
-class _ExchangeApp extends StatefulWidget {
+class $ExchangeApp extends StatefulWidget {
   @override
   _ExchangeAppState createState() => _ExchangeAppState();
 }
 
-class _ExchangeAppState extends State<_ExchangeApp> {
+class _ExchangeAppState extends State<$ExchangeApp> {
   final _data = <DataItemConverter>[
     DataItemConverter(
         title: 'Area', iconPath: 'assets/icons/area.png', color: Colors.blue),
