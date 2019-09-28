@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 // @JsonSerializable(nullable: false)
-class ModelBackdropResponse {
+class ModelBackdropResponse implements A {
   final String title;
 
   @JsonKey(name: 'icon_code')
@@ -24,6 +24,14 @@ class ModelBackdropResponse {
         'icon_code': this.iconCode,
         'color': this.color.toString(), // Temporary
       };
+
+  @override
+  ModelBackdropResponse fromJson(Map<String, dynamic> json) =>
+      ModelBackdropResponse(
+        title: json['title'] as String,
+        iconCode: json['icon_code'] as String,
+        color: HexColor(json['color']),
+      );
 }
 
 class HexColor extends Color {
@@ -36,4 +44,9 @@ class HexColor extends Color {
   }
 
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
+abstract class A {
+  A fromJson(Map<String, dynamic> json);
+  const A();
 }

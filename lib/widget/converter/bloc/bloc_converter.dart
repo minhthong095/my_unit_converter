@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import 'package:my_unit_converter/model/model_convert.dart';
+import 'package:my_unit_converter/networking/requesting.dart';
 import 'package:my_unit_converter/widget/converter/bloc/event_converter.dart';
 import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
 import 'package:my_unit_converter/widget/converter/bloc/state_converter.dart';
@@ -10,7 +12,7 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
-    _runModifyThing(event);
+    yield* _runModifyThing(event);
   }
 
   Stream<ConverterUpdated> _runModifyThing(EventConverter event) async* {
@@ -32,11 +34,25 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
       unitTo = event.outputConversion;
     }
 
+    // print('start prime()');
+    // final stopwatch = Stopwatch()..start();
+    // // await compute(_test, 1);
+    // await _test(1);
+    // print('prime() executed in ${stopwatch.elapsed}');
+
     yield ConverterUpdated(
         outcome: input != ""
             ? calculateOutcome(double.parse(input), unitFrom, unitTo)
             : input,
         converter: ModelConverter(input, unitFrom, unitTo));
+  }
+
+  static _test(int a) {
+    int i = -1000000000;
+    while (i < 1090000000) {
+      i += 1;
+    }
+    print("SATISFIED");
   }
 
   String calculateOutcome(
@@ -46,6 +62,12 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
     return isDecimal(outcomeValue)
         ? outcomeValue.toString()
         : outcomeValue.round().toString();
+  }
+
+  bool isPrime(int numX) {
+    if (numX % 2 == 0) return false;
+    for (int i = 3; i * i < numX; i += 2) if (numX % i == 0) return false;
+    return true;
   }
 
   bool isDecimal(double value) => value % value.round() != 0;

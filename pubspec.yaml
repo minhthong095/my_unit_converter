@@ -24,6 +24,7 @@ dependencies:
   http: ^0.12.0+2
   json_annotation: ^3.0.0
   checked_yaml: 1.0.2
+  dio: 3.0.2
   flutter:
     sdk: flutter
 

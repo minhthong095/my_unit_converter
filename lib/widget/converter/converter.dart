@@ -43,7 +43,6 @@ class _ConverterState extends State<Converter> {
               ),
               BlocBuilder<BlocConverter, StateConverter>(
                 builder: (context, state) {
-                  print('state Output ' + state.toString());
                   return _InputOutputForm(
                       title: 'Output',
                       enabledField: false,
@@ -88,7 +87,6 @@ class _DropDownFormState extends State<_DropDownForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<BlocConverter, StateConverter>(
       builder: (context, state) {
-        print('state DropDownForm ' + state.toString());
         return Container(
             width: double.infinity,
             height: 60,
