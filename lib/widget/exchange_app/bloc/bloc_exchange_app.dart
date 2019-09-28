@@ -19,7 +19,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
     yield* _initDataExchangeApp(event);
   }
 
-  Stream<InitData> _initDataExchangeApp(EventExchangeApp event) async* {
+  Stream<StateExchangeApp> _initDataExchangeApp(EventExchangeApp event) async* {
     if (event is prefix0.Init) {
       try {
         // final stopwatch = Stopwatch()..start();
@@ -55,7 +55,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
             backdropResponse: all[0].data, conversionResponse: all[1].data);
       } catch (e) {
         print(e);
-        yield InitData(backdropResponse: null, conversionResponse: null);
+        yield InitFailed(e: e);
       }
     }
   }
