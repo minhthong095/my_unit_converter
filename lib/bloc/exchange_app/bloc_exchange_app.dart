@@ -1,13 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
-import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
-import 'package:my_unit_converter/model_response/model_conversion_response.dart';
+import 'package:my_unit_converter/bloc/exchange_app/state_exchange_app.dart';
 import 'package:my_unit_converter/networking/requesting.dart';
-import 'package:my_unit_converter/networking/url.dart';
-import 'package:my_unit_converter/widget/exchange_app/bloc/event_exchange_app.dart';
-import 'package:my_unit_converter/widget/exchange_app/bloc/event_exchange_app.dart'
-    as prefix0;
-import 'package:my_unit_converter/widget/exchange_app/bloc/state_exchange_app.dart';
+
+import 'event_exchange_app.dart';
 
 class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
   @override
@@ -20,7 +15,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
   }
 
   Stream<StateExchangeApp> _initDataExchangeApp(EventExchangeApp event) async* {
-    if (event is prefix0.Init) {
+    if (event is Init) {
       try {
         // final stopwatch = Stopwatch()..start();
         // final responseBackdrop =

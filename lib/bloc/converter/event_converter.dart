@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
+
+import 'model_conversion.dart';
 
 abstract class EventConverter {
   const EventConverter();

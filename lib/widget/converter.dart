@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_unit_converter/widget/converter/bloc/bloc_converter.dart';
-import 'package:my_unit_converter/widget/converter/bloc/event_converter.dart';
-import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
-import 'package:my_unit_converter/widget/converter/bloc/state_converter.dart';
+import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
+import 'package:my_unit_converter/bloc/converter/event_converter.dart';
+import 'package:my_unit_converter/bloc/converter/model_conversion.dart';
+import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 
 class Converter extends StatefulWidget {
   final List<ModelConversion> units;

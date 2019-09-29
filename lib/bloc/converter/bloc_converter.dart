@@ -1,10 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
+import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 import 'package:my_unit_converter/model/model_convert.dart';
-import 'package:my_unit_converter/networking/requesting.dart';
-import 'package:my_unit_converter/widget/converter/bloc/event_converter.dart';
-import 'package:my_unit_converter/widget/converter/bloc/model_conversion.dart';
-import 'package:my_unit_converter/widget/converter/bloc/state_converter.dart';
+
+import 'event_converter.dart';
+import 'model_conversion.dart';
 
 class BlocConverter extends Bloc<EventConverter, StateConverter> {
   @override

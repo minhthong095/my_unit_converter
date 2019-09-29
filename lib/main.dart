@@ -1,7 +1,7 @@
 import 'dart:convert' as prefix0;
 
 import 'package:flutter/material.dart';
-import 'package:my_unit_converter/widget/splash/splash.dart';
+import 'package:my_unit_converter/screen/splash.dart';
 
 void main() => runApp(new MyApp());
 
