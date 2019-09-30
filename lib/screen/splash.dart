@@ -3,25 +3,55 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_unit_converter/bloc/alert_failed/bloc_alert_failed.dart';
+import 'package:my_unit_converter/bloc/alert_failed/state_alert_failed.dart';
 import 'package:my_unit_converter/bloc/exchange_app/bloc_exchange_app.dart';
+import 'package:my_unit_converter/bloc/exchange_app/event_exchange_app.dart';
 import 'package:my_unit_converter/bloc/exchange_app/state_exchange_app.dart';
+import 'package:my_unit_converter/page_transition/transition_bot_top.dart';
+import 'package:my_unit_converter/widget/alert_failed.dart';
 
-class Splash extends StatelessWidget {
+import 'exchange_app.dart';
+
+class Splash extends StatefulWidget {
+  @override
+  _ProviderSplash createState() => _ProviderSplash();
+}
+
+class _ProviderSplash extends State<Splash> {
+  BlocAlertFailed _blocAlertFailed;
+
+  @override
+  void initState() {
+    _blocAlertFailed = BlocAlertFailed();
+    super.initState();
+  }
+
+  // @override
+  // void dispose() {
+  //   _blocAlertFailed.dispose();
+  //   super.dispose();
+  // }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      builder: (context) => BlocExchangeApp(),
-      child: $Splash(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<BlocAlertFailed>(builder: (context) => _blocAlertFailed),
+        BlocProvider<BlocExchangeApp>(
+            builder: (context) => BlocExchangeApp(_blocAlertFailed)),
+      ],
+      child: _$Splash(),
     );
   }
 }
 
-class $Splash extends StatefulWidget {
+class _$Splash extends StatefulWidget {
   @override
-  _$SplashState createState() => _$SplashState();
+  _StateSplash createState() => _StateSplash();
 }
 
-class _$SplashState extends State<$Splash> with SingleTickerProviderStateMixin {
+class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Tween _opacityAnimation;
   BlocExchangeApp _blocExchangeApp;
@@ -29,91 +59,91 @@ class _$SplashState extends State<$Splash> with SingleTickerProviderStateMixin {
     "AParam": "AValue",
     "BParam": ["BValue1", "BValue2", "BValue3"]
   };
+  AnimationStatusListener _listener;
 
   @override
   void initState() {
     _controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 700));
     _opacityAnimation = Tween(begin: 0.5, end: 1);
-    _controller.addStatusListener((status) {
+    _listener = ((status) {
       if (status == AnimationStatus.completed)
         _controller.reverse();
       else if (status == AnimationStatus.dismissed) _controller.forward();
     });
+    _controller.addStatusListener(_listener);
     _controller.forward();
 
     _blocExchangeApp = BlocProvider.of<BlocExchangeApp>(context);
-    // _blocExchangeApp.dispatch(Init(tempBodyForConversion: _tempBody));
+    _fetchData();
 
     super.initState();
   }
 
   @override
   void dispose() {
+    _controller.removeStatusListener(_listener);
     _controller.dispose();
     super.dispose();
   }
 
+  void _stopLoadingAnimation() {
+    _controller.removeStatusListener(_listener);
+    _controller.animateTo(1);
+  }
+
+  void _startLoadingAnimation() {
+    _controller.addStatusListener(_listener);
+    _controller.reverse();
+    _fetchData();
+  }
+
+  void _fetchData() {
+    _blocExchangeApp.dispatch(Init(tempBodyForConversion: _tempBody));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BlocExchangeApp, StateExchangeApp>(
+    return BlocListener<BlocAlertFailed, StateAlertFailed>(
       listener: (context, state) {
-        // Default always will be Init on StateExchangeApp
-        print("IMPACT");
-        // if (state is InitData)
-        //   Navigator.of(context).pushAndRemoveUntil(
-        //       TransitionBotTop(child: ExchangeApp()),
-        //       (Route<dynamic> route) => false);
-        // else if (state is InitFailed)
-        // _showAlert(context, state.exception.toString());
+        if (state is OnAlertFailed) {
+          _stopLoadingAnimation();
+          // _controller.stop();
+        }
       },
-      child: Scaffold(
-          backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Stack(
-              children: <Widget>[
-                Center(
-                    child: InkWell(
-                        onTap: () {},
-                        child: AnimatedBuilder(
-                          animation: _opacityAnimation.animate(_controller),
-                          builder: (context, child) {
-                            return Opacity(
-                                opacity: _controller.value,
-                                child: Image.asset(
-                                  'assets/icons/flutter.png',
-                                  width: 130,
-                                  height: 130,
-                                ));
-                          },
-                        ))),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    child: FractionallySizedBox(
-                      widthFactor: 0.7,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              stops: [0.04, 0.04],
-                              colors: [
-                                Colors.red,
-                                Colors.green,
-                              ],
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(2.5))),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )),
+      child: BlocListener<BlocExchangeApp, StateExchangeApp>(
+        listener: (context, state) {
+          print("IMPACT");
+          if (state is InitData)
+            Navigator.of(context).pushAndRemoveUntil(
+                TransitionBotTop(child: ExchangeApp()),
+                (Route<dynamic> route) => false);
+        },
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: AlertFailed(
+                partner: Center(
+                  child: InkWell(
+                      onTap: () {
+                        _startLoadingAnimation();
+                      },
+                      child: AnimatedBuilder(
+                        animation: _opacityAnimation.animate(_controller),
+                        builder: (context, child) {
+                          return Opacity(
+                              opacity: _controller.value,
+                              child: Image.asset(
+                                'assets/icons/flutter.png',
+                                width: 130,
+                                height: 130,
+                              ));
+                        },
+                      )),
+                ),
+              ),
+            )),
+      ),
     );
   }
 }

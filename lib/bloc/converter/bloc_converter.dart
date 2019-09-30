@@ -46,14 +46,6 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
         converter: ModelConverter(input, unitFrom, unitTo));
   }
 
-  static _test(int a) {
-    int i = -1000000000;
-    while (i < 1090000000) {
-      i += 1;
-    }
-    print("SATISFIED");
-  }
-
   String calculateOutcome(
       double input, ModelConversion inputType, ModelConversion outputType) {
     final double outcomeValue =

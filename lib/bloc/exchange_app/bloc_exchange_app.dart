@@ -1,10 +1,16 @@
 import 'package:bloc/bloc.dart';
+import 'package:my_unit_converter/bloc/alert_failed/bloc_alert_failed.dart';
+import 'package:my_unit_converter/bloc/alert_failed/event_alert_failed.dart';
 import 'package:my_unit_converter/bloc/exchange_app/state_exchange_app.dart';
 import 'package:my_unit_converter/networking/requesting.dart';
 
 import 'event_exchange_app.dart';
 
 class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
+  final BlocAlertFailed _blocAlertFailed;
+
+  BlocExchangeApp(this._blocAlertFailed);
+
   @override
   StateExchangeApp get initialState =>
       InitData(backdropResponse: null, conversionResponse: null);
@@ -12,6 +18,12 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
   @override
   Stream<StateExchangeApp> mapEventToState(EventExchangeApp event) async* {
     yield* _initDataExchangeApp(event);
+  }
+
+  @override
+  void dispose() {
+    print("DISPOSE BLOCEXCHANGE APP");
+    super.dispose();
   }
 
   Stream<StateExchangeApp> _initDataExchangeApp(EventExchangeApp event) async* {
@@ -50,6 +62,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
             backdropResponse: all[0].data, conversionResponse: all[1].data);
       } catch (e) {
         print(e);
+        _blocAlertFailed.dispatch(EventAlertFailed());
         yield InitFailed(e: e);
       }
     }
