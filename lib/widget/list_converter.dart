@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_unit_converter/bloc/change_category/bloc_change_category.dart';
+import 'package:my_unit_converter/bloc/change_category/event_change_category.dart';
 import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 
 class ListConverter extends StatefulWidget {
   final List<ModelBackdropResponse> data;
   final int defaultIndex;
-  final Function onItemTap;
 
-  const ListConverter(
-      {@required this.data, this.defaultIndex = 0, this.onItemTap});
+  const ListConverter({@required this.data, this.defaultIndex = 0});
 
   @override
   _ListConverterState createState() => _ListConverterState();
@@ -15,7 +16,7 @@ class ListConverter extends StatefulWidget {
 
 class _ListConverterState extends State<ListConverter> {
   ModelBackdropResponse _currentConverter;
-
+  BlocChangeCategory _blocCategory;
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
@@ -23,7 +24,14 @@ class _ListConverterState extends State<ListConverter> {
   }
 
   @override
+  void initState() {
+    _blocCategory = BlocProvider.of<BlocChangeCategory>(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("BUILD LIST CONVERTER");
     return Scaffold(
       backgroundColor: _currentConverter.color,
       body: ListView.builder(
@@ -31,9 +39,9 @@ class _ListConverterState extends State<ListConverter> {
           itemCount: widget.data.length,
           itemBuilder: (context, index) => InkWell(
                 onTap: () {
-                  widget.onItemTap(index);
                   setState(() {
                     _currentConverter = widget.data[index];
+                    _blocCategory.dispatch(EventChange(index: index));
                   });
                 },
                 child: ItemConverter(data: widget.data[index]),

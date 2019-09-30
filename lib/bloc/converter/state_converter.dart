@@ -7,10 +7,6 @@ abstract class StateConverter {
   const StateConverter(this.converter, this.outcome);
 }
 
-class ConverterDefault extends StateConverter {
-  ConverterDefault() : super(ModelConverter("", null, null), "");
-}
-
 class ConverterUpdated extends StateConverter {
   const ConverterUpdated(
       {@required ModelConverter converter, @required String outcome})

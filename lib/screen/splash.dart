@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/bloc/alert_failed/bloc_alert_failed.dart';
 import 'package:my_unit_converter/bloc/alert_failed/state_alert_failed.dart';
+import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 import 'package:my_unit_converter/bloc/exchange_app/bloc_exchange_app.dart';
 import 'package:my_unit_converter/bloc/exchange_app/event_exchange_app.dart';
 import 'package:my_unit_converter/bloc/exchange_app/state_exchange_app.dart';
+import 'package:my_unit_converter/model/model_convert.dart';
 import 'package:my_unit_converter/page_transition/transition_bot_top.dart';
 import 'package:my_unit_converter/widget/alert_failed.dart';
 
@@ -111,6 +113,7 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
             Navigator.of(context).pushAndRemoveUntil(
                 TransitionBotTop(
                     child: ExchangeApp(
+                  units: state.conversionResponse,
                   data: state.backdropResponse,
                 )),
                 (Route<dynamic> route) => false);

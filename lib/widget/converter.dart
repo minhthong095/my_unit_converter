@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
 import 'package:my_unit_converter/bloc/converter/event_converter.dart';
-import 'package:my_unit_converter/bloc/converter/model_conversion.dart';
 import 'package:my_unit_converter/bloc/converter/state_converter.dart';
+import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
 
 class Converter extends StatefulWidget {
-  final List<ModelConversion> units;
+  final List<ModelMiniConversionResponse> units;
 
   const Converter({@required this.units});
 
@@ -17,6 +17,8 @@ class Converter extends StatefulWidget {
 class _ConverterState extends State<Converter> {
   @override
   Widget build(BuildContext context) {
+    print("BUILD CONVERTER");
+
     return Container(
       child: SingleChildScrollView(
         child: Container(
@@ -65,7 +67,7 @@ class _ConverterState extends State<Converter> {
 }
 
 class _DropDownForm extends StatefulWidget {
-  final List<ModelConversion> data;
+  final List<ModelMiniConversionResponse> data;
   final bool bSide;
 
   const _DropDownForm({@required this.data, this.bSide = false});
@@ -87,6 +89,11 @@ class _DropDownFormState extends State<_DropDownForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<BlocConverter, StateConverter>(
       builder: (context, state) {
+        final a = widget.bSide
+            ? state.converter.conversionTo
+            : state.converter.conversionTo;
+        final b = widget.data[0];
+        print("BUILD DROPDOWN FORM");
         return Container(
             width: double.infinity,
             height: 60,
@@ -94,20 +101,18 @@ class _DropDownFormState extends State<_DropDownForm> {
             decoration: BoxDecoration(
                 border: Border.all(width: 1, color: Colors.black38)),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<ModelConversion>(
+              child: DropdownButton<ModelMiniConversionResponse>(
                   hint: Text('Choose'),
-                  onChanged: (ModelConversion conversion) {
+                  onChanged: (ModelMiniConversionResponse conversion) {
                     widget.bSide
                         ? blocConverter.dispatch(
                             UpdateOutputType(outputConversion: conversion))
                         : blocConverter.dispatch(
                             UpdateInputType(inputConversion: conversion));
                   },
-                  value: widget.bSide
-                      ? state.converter.conversionTo
-                      : state.converter.conversionFrom,
+                  value: state.converter.conversionFrom,
                   items: widget.data.map((value) {
-                    return DropdownMenuItem<ModelConversion>(
+                    return DropdownMenuItem<ModelMiniConversionResponse>(
                         value: value,
                         child: Text(
                           value.name,
@@ -156,6 +161,7 @@ class _InputOutputFormState extends State<_InputOutputForm> {
 
   @override
   Widget build(BuildContext context) {
+    print("BUILD INOUT FORM");
     return Container(
       child: TextField(
         enabled: widget.enabledField,

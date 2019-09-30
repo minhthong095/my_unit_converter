@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:my_unit_converter/bloc/converter/model_conversion.dart';
+import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
 
-class ModelConverter extends Equatable {
+class ModelConverter {
   final String valueInput;
-  final ModelConversion conversionFrom;
-  final ModelConversion conversionTo;
+  final ModelMiniConversionResponse conversionFrom;
+  final ModelMiniConversionResponse conversionTo;
 
-  ModelConverter(this.valueInput, this.conversionFrom, this.conversionTo)
-      : super([valueInput, conversionFrom, conversionTo]);
+  ModelConverter(this.valueInput, this.conversionFrom, this.conversionTo);
 }

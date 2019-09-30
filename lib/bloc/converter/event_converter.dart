@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-
-import 'model_conversion.dart';
+import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
 
 abstract class EventConverter {
   const EventConverter();
@@ -12,19 +11,19 @@ class UpdateInput extends EventConverter {
 }
 
 class UpdateInputType extends EventConverter {
-  final ModelConversion inputConversion;
+  final ModelMiniConversionResponse inputConversion;
   const UpdateInputType({@required this.inputConversion}) : super();
 }
 
 class UpdateOutputType extends EventConverter {
-  final ModelConversion outputConversion;
+  final ModelMiniConversionResponse outputConversion;
   const UpdateOutputType({@required this.outputConversion}) : super();
 }
 
 class InitTypes extends EventConverter {
   final String newInput;
-  final ModelConversion outputConversion;
-  final ModelConversion inputConversion;
+  final ModelMiniConversionResponse outputConversion;
+  final ModelMiniConversionResponse inputConversion;
   const InitTypes(
       {@required this.outputConversion,
       @required this.inputConversion,

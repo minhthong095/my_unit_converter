@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 // part 'model_mini_conversion_response.g.dart';
 
 // @JsonSerializable(nullable: false)
-class ModelMiniConversionResponse {
+class ModelMiniConversionResponse extends Equatable {
   final String name;
 
   final double conversion;
@@ -11,7 +12,8 @@ class ModelMiniConversionResponse {
   @JsonKey(name: 'base_unit', defaultValue: false, nullable: true)
   final bool baseUnit;
 
-  ModelMiniConversionResponse({this.name, this.conversion, this.baseUnit});
+  ModelMiniConversionResponse({this.name, this.conversion, this.baseUnit})
+      : super([name, conversion, baseUnit]);
 
   factory ModelMiniConversionResponse.fromJson(Map<String, dynamic> json) =>
       ModelMiniConversionResponse(

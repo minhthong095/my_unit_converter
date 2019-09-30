@@ -1,13 +1,21 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 import 'package:my_unit_converter/model/model_convert.dart';
+import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
 
 import 'event_converter.dart';
 import 'model_conversion.dart';
 
 class BlocConverter extends Bloc<EventConverter, StateConverter> {
+  final ModelMiniConversionResponse defaultConverter;
+
+  BlocConverter({@required this.defaultConverter});
+
   @override
-  StateConverter get initialState => ConverterDefault();
+  StateConverter get initialState => ConverterUpdated(
+      outcome: "",
+      converter: (ModelConverter("", defaultConverter, defaultConverter)));
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
@@ -16,10 +24,10 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
 
   Stream<ConverterUpdated> _runModifyThing(EventConverter event) async* {
     // Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
-    final currentConverter = currentState.converter;
+    final currentConverter = (currentState).converter;
     String input = currentConverter.valueInput;
-    ModelConversion unitFrom = currentConverter.conversionFrom;
-    ModelConversion unitTo = currentConverter.conversionTo;
+    ModelMiniConversionResponse unitFrom = currentConverter.conversionFrom;
+    ModelMiniConversionResponse unitTo = currentConverter.conversionTo;
 
     if (event is UpdateInput)
       input = event.newInput;
@@ -46,8 +54,8 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
         converter: ModelConverter(input, unitFrom, unitTo));
   }
 
-  String calculateOutcome(
-      double input, ModelConversion inputType, ModelConversion outputType) {
+  String calculateOutcome(double input, ModelMiniConversionResponse inputType,
+      ModelMiniConversionResponse outputType) {
     final double outcomeValue =
         (input / inputType.conversion) * outputType.conversion;
     return isDecimal(outcomeValue)
