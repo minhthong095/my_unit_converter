@@ -36,27 +36,6 @@ class $ExchangeApp extends StatefulWidget {
 }
 
 class _ExchangeAppState extends State<$ExchangeApp> {
-  final _data = <DataItemConverter>[
-    DataItemConverter(
-        title: 'Area', iconPath: 'assets/icons/area.png', color: Colors.blue),
-    DataItemConverter(
-        title: 'Length',
-        iconPath: 'assets/icons/length.png',
-        color: Colors.greenAccent),
-    DataItemConverter(
-        title: 'Mass', iconPath: 'assets/icons/mass.png', color: Colors.green),
-    DataItemConverter(
-        title: 'Digital Storage',
-        iconPath: 'assets/icons/digital_storage.png',
-        color: Colors.indigo),
-    DataItemConverter(
-        title: 'Time', iconPath: 'assets/icons/time.png', color: Colors.lime),
-    DataItemConverter(
-        title: 'Volume',
-        iconPath: 'assets/icons/volume.png',
-        color: Colors.orange),
-  ];
-
   bool _panelVisible = false;
   int _currentDataIndex = 0;
   Map<String, List<ModelConversion>> _unit;
@@ -98,11 +77,12 @@ class _ExchangeAppState extends State<$ExchangeApp> {
                 panelTitle: widget.data[_currentDataIndex].title,
                 panelVisible: _panelVisible,
                 backdrop: ListConverter(
-                  data: _data,
+                  data: widget.data,
                   defaultIndex: _currentDataIndex,
                   onItemTap: _onItemTap,
                 ),
-                panel: Converter(units: _unit[_data[_currentDataIndex].title]),
+                panel: Converter(
+                    units: _unit[widget.data[_currentDataIndex].title]),
               ),
             ),
           );
@@ -122,7 +102,7 @@ class _ExchangeAppState extends State<$ExchangeApp> {
   }
 
   void _initConverterState(int index) {
-    final defaultConversion = _unit[_data[index].title][0];
+    final defaultConversion = _unit[widget.data[index].title][0];
     blocConverter.dispatch(InitTypes(
         newInput: "",
         inputConversion: defaultConversion,

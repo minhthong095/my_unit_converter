@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 
 class ListConverter extends StatefulWidget {
-  final List<DataItemConverter> data;
+  final List<ModelBackdropResponse> data;
   final int defaultIndex;
   final Function onItemTap;
 
@@ -13,7 +14,7 @@ class ListConverter extends StatefulWidget {
 }
 
 class _ListConverterState extends State<ListConverter> {
-  DataItemConverter _currentConverter;
+  ModelBackdropResponse _currentConverter;
 
   @override
   void didChangeDependencies() async {
@@ -42,7 +43,7 @@ class _ListConverterState extends State<ListConverter> {
 }
 
 class ItemConverter extends StatelessWidget {
-  final DataItemConverter data;
+  final ModelBackdropResponse data;
 
   const ItemConverter({@required this.data}) : assert(data != null);
 
@@ -55,7 +56,7 @@ class ItemConverter extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(25),
             child: Image.asset(
-              data.iconPath,
+              data.iconCode,
             ),
           ),
           Text(
