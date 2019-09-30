@@ -27,12 +27,6 @@ class _ProviderSplash extends State<Splash> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   _blocAlertFailed.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -108,7 +102,6 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
       listener: (context, state) {
         if (state is OnAlertFailed) {
           _stopLoadingAnimation();
-          // _controller.stop();
         }
       },
       child: BlocListener<BlocExchangeApp, StateExchangeApp>(
@@ -116,7 +109,10 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
           print("IMPACT");
           if (state is InitData)
             Navigator.of(context).pushAndRemoveUntil(
-                TransitionBotTop(child: ExchangeApp()),
+                TransitionBotTop(
+                    child: ExchangeApp(
+                  data: state.backdropResponse,
+                )),
                 (Route<dynamic> route) => false);
         },
         child: Scaffold(

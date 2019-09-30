@@ -15,7 +15,7 @@ class ModelBackdropResponse implements A {
   factory ModelBackdropResponse.fromJson(Map<String, dynamic> json) =>
       ModelBackdropResponse(
         title: json['title'] as String,
-        iconCode: json['icon_code'] as String,
+        iconCode: "assets/icons/" + (json['icon_code'] as String) + ".png",
         color: HexColor(json['color']),
       );
 

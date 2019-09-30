@@ -5,23 +5,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
 import 'package:my_unit_converter/bloc/converter/event_converter.dart';
 import 'package:my_unit_converter/bloc/converter/model_conversion.dart';
+import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 import 'package:my_unit_converter/widget/backdrop.dart';
 import 'package:my_unit_converter/widget/converter.dart';
 import 'package:my_unit_converter/widget/list_converter.dart';
 
 class ExchangeApp extends StatelessWidget {
+  final List<ModelBackdropResponse> data;
+  const ExchangeApp({@required this.data});
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
         theme: ThemeData(fontFamily: 'Raleway'),
         home: BlocProvider<BlocConverter>(
           builder: (context) => BlocConverter(),
-          child: $ExchangeApp(),
+          child: $ExchangeApp(
+            data: this.data,
+          ),
         ));
   }
 }
 
 class $ExchangeApp extends StatefulWidget {
+  final List<ModelBackdropResponse> data;
+  const $ExchangeApp({@required this.data});
+
   @override
   _ExchangeAppState createState() => _ExchangeAppState();
 }
@@ -85,8 +94,8 @@ class _ExchangeAppState extends State<$ExchangeApp> {
               child: Backdrop(
                 backdropTitlePanelOn: 'Unit Converter',
                 backdropTitlePanelOff: 'Select a Category',
-                backTitleColor: _data[_currentDataIndex].color,
-                panelTitle: _data[_currentDataIndex].title,
+                backTitleColor: widget.data[_currentDataIndex].color,
+                panelTitle: widget.data[_currentDataIndex].title,
                 panelVisible: _panelVisible,
                 backdrop: ListConverter(
                   data: _data,
