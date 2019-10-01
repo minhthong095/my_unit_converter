@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 class Backdrop extends StatefulWidget {
   final Widget backdrop;
   final Widget panel;
-  final bool panelVisible;
   final String backdropTitlePanelOff;
   final String backdropTitlePanelOn;
   final String panelTitle;
   final Color backTitleColor;
 
-  const Backdrop(
-      {@required this.backdrop,
-      @required this.panel,
-      @required this.backdropTitlePanelOff,
-      @required this.panelTitle,
-      @required this.backdropTitlePanelOn,
-      @required this.backTitleColor,
-      this.panelVisible = true});
+  const Backdrop({
+    @required this.backdrop,
+    @required this.panel,
+    @required this.backdropTitlePanelOff,
+    @required this.panelTitle,
+    @required this.backdropTitlePanelOn,
+    @required this.backTitleColor,
+  });
 
   @override
   _BackdropState createState() => _BackdropState();
@@ -36,9 +35,7 @@ class _BackdropState extends State<Backdrop>
   void initState() {
     super.initState();
     _controller = AnimationController(
-        value: widget.panelVisible ? 0 : 1,
-        vsync: this,
-        duration: Duration(seconds: 1));
+        value: 0, vsync: this, duration: Duration(seconds: 1));
   }
 
   @override
@@ -50,7 +47,8 @@ class _BackdropState extends State<Backdrop>
   @override
   void didUpdateWidget(Backdrop oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _animatePanel();
+    // Always go up again when user choose category.
+    _controller.fling(velocity: -1);
   }
 
   @override
@@ -79,12 +77,6 @@ class _BackdropState extends State<Backdrop>
         },
       ),
     );
-  }
-
-  void _animatePanel() {
-    if (widget.panelVisible) {
-      _controller.fling(velocity: -1);
-    }
   }
 
   void _toggleHamburgerBtn() {

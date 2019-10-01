@@ -63,23 +63,18 @@ class _ExchangeAppState extends State<$ExchangeApp> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: DefaultAssetBundle.of(context)
-          .loadString('assets/converter/regular_units.json'),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        return Container(
+    return Container(
           color: Colors.white,
           child: SafeArea(
             top: false,
             child: BlocBuilder<BlocChangeCategory, StateChangeCategory>(
               builder: (context, state) {
-                print("BUILD BACKDROP");
+                print("BUILD BACKDROP " + state.toString());
                 return Backdrop(
                   backdropTitlePanelOn: 'Unit Converter',
                   backdropTitlePanelOff: 'Select a Category',
                   backTitleColor: state.category.color,
                   panelTitle: state.category.title,
-                  panelVisible: false,
                   backdrop: ListConverter(
                     data: widget.data,
                     cateogry: state.category,
@@ -90,7 +85,5 @@ class _ExchangeAppState extends State<$ExchangeApp> {
             ),
           ),
         );
-      },
-    );
   }
 }

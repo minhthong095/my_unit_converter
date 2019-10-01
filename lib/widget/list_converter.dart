@@ -33,9 +33,7 @@ class _ListConverterState extends State<ListConverter> {
           itemCount: widget.data.length,
           itemBuilder: (context, index) => InkWell(
                 onTap: () {
-                  setState(() {
-                    _blocCategory.dispatch(EventChange(index: index));
-                  });
+                  _blocCategory.dispatch(EventChange(index: index));
                 },
                 child: ItemConverter(data: widget.data[index]),
               )),

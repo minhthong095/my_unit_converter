@@ -27,6 +27,9 @@ class BlocChangeCategory
   @override
   Stream<StateChangeCategory> mapEventToState(
       EventChangeCategory event) async* {
+    print("EVENT CHANGE CATEGORY " + event.toString());
+
+    // All events is change category.
     final conversion = Lodash.find(units, (model) {
       return model.name == data[defaultIndex].title;
     });
