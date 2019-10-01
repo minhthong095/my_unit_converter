@@ -6,22 +6,16 @@ import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 
 class ListConverter extends StatefulWidget {
   final List<ModelBackdropResponse> data;
-  final int defaultIndex;
+  final ModelBackdropResponse cateogry;
 
-  const ListConverter({@required this.data, this.defaultIndex = 0});
+  const ListConverter({@required this.cateogry, this.data});
 
   @override
   _ListConverterState createState() => _ListConverterState();
 }
 
 class _ListConverterState extends State<ListConverter> {
-  ModelBackdropResponse _currentConverter;
   BlocChangeCategory _blocCategory;
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    _currentConverter = widget.data[widget.defaultIndex];
-  }
 
   @override
   void initState() {
@@ -33,14 +27,13 @@ class _ListConverterState extends State<ListConverter> {
   Widget build(BuildContext context) {
     print("BUILD LIST CONVERTER");
     return Scaffold(
-      backgroundColor: _currentConverter.color,
+      backgroundColor: widget.cateogry.color,
       body: ListView.builder(
           padding: EdgeInsets.only(bottom: 40),
           itemCount: widget.data.length,
           itemBuilder: (context, index) => InkWell(
                 onTap: () {
                   setState(() {
-                    _currentConverter = widget.data[index];
                     _blocCategory.dispatch(EventChange(index: index));
                   });
                 },

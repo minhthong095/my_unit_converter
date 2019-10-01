@@ -17,6 +17,7 @@ class Converter extends StatefulWidget {
 class _ConverterState extends State<Converter> {
   @override
   Widget build(BuildContext context) {
+    final b = widget.units;
     print("BUILD CONVERTER");
 
     return Container(
@@ -89,10 +90,6 @@ class _DropDownFormState extends State<_DropDownForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<BlocConverter, StateConverter>(
       builder: (context, state) {
-        final a = widget.bSide
-            ? state.converter.conversionTo
-            : state.converter.conversionTo;
-        final b = widget.data[0];
         print("BUILD DROPDOWN FORM");
         return Container(
             width: double.infinity,
@@ -110,7 +107,9 @@ class _DropDownFormState extends State<_DropDownForm> {
                         : blocConverter.dispatch(
                             UpdateInputType(inputConversion: conversion));
                   },
-                  value: state.converter.conversionFrom,
+                  value: widget.bSide
+                      ? state.converter.conversionTo
+                      : state.converter.conversionFrom,
                   items: widget.data.map((value) {
                     return DropdownMenuItem<ModelMiniConversionResponse>(
                         value: value,

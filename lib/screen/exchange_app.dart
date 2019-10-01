@@ -3,6 +3,7 @@ import 'dart:convert' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/bloc/change_category/bloc_change_category.dart';
+import 'package:my_unit_converter/bloc/change_category/state_change_category.dart';
 import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
 import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 import 'package:my_unit_converter/model_response/model_conversion_response.dart';
@@ -19,20 +20,25 @@ class ExchangeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final defaultDetailCategory = Lodash.find(units, (model) {
+      return model.name == data[defaultIndex].title;
+    });
     return new MaterialApp(
         theme: ThemeData(fontFamily: 'Raleway'),
         home: MultiBlocProvider(
           providers: [
             BlocProvider<BlocConverter>(
                 builder: (context) => BlocConverter(
-                    defaultConverter: this.units[defaultIndex].conversions[0])),
+                    defaultDetailCategory: defaultDetailCategory)),
             BlocProvider<BlocChangeCategory>(
-                builder: (context) =>
-                    BlocChangeCategory(defaultIndex: defaultIndex))
+                builder: (context) => BlocChangeCategory(
+                    data: data,
+                    defaultIndex: defaultIndex,
+                    units: units,
+                    defaultDetailCategory: defaultDetailCategory))
           ],
           child: $ExchangeApp(
             data: this.data,
-            units: this.units,
           ),
         ));
   }
@@ -40,8 +46,7 @@ class ExchangeApp extends StatelessWidget {
 
 class $ExchangeApp extends StatefulWidget {
   final List<ModelBackdropResponse> data;
-  final List<ModelConversionResponse> units;
-  const $ExchangeApp({@required this.data, @required this.units});
+  const $ExchangeApp({@required this.data});
 
   @override
   _ExchangeAppState createState() => _ExchangeAppState();
@@ -66,21 +71,20 @@ class _ExchangeAppState extends State<$ExchangeApp> {
           color: Colors.white,
           child: SafeArea(
             top: false,
-            child: BlocBuilder<BlocChangeCategory, int>(
-              builder: (context, index) {
+            child: BlocBuilder<BlocChangeCategory, StateChangeCategory>(
+              builder: (context, state) {
                 print("BUILD BACKDROP");
                 return Backdrop(
                   backdropTitlePanelOn: 'Unit Converter',
                   backdropTitlePanelOff: 'Select a Category',
-                  backTitleColor: widget.data[index].color,
-                  panelTitle: widget.data[index].title,
+                  backTitleColor: state.category.color,
+                  panelTitle: state.category.title,
                   panelVisible: false,
                   backdrop: ListConverter(
                     data: widget.data,
-                    defaultIndex: index,
+                    cateogry: state.category,
                   ),
-                  panel:
-                      Converter(units: _getConversionIndex(index).conversions),
+                  panel: Converter(units: state.detailCategory.conversions),
                 );
               },
             ),
@@ -88,14 +92,5 @@ class _ExchangeAppState extends State<$ExchangeApp> {
         );
       },
     );
-  }
-
-  ModelConversionResponse _getConversionIndex(int index) {
-    final b = Lodash.find(widget.units, (model) {
-      return model.name == widget.data[index].title;
-    });
-    return Lodash.find(widget.units, (model) {
-      return model.name == widget.data[index].title;
-    });
   }
 }

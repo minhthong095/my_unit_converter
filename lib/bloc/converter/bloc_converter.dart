@@ -2,20 +2,21 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 import 'package:my_unit_converter/model/model_convert.dart';
+import 'package:my_unit_converter/model_response/model_conversion_response.dart';
 import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
 
 import 'event_converter.dart';
-import 'model_conversion.dart';
 
 class BlocConverter extends Bloc<EventConverter, StateConverter> {
-  final ModelMiniConversionResponse defaultConverter;
+  final ModelConversionResponse defaultDetailCategory;
 
-  BlocConverter({@required this.defaultConverter});
+  BlocConverter({@required this.defaultDetailCategory});
 
   @override
   StateConverter get initialState => ConverterUpdated(
       outcome: "",
-      converter: (ModelConverter("", defaultConverter, defaultConverter)));
+      converter: (ModelConverter("", defaultDetailCategory.conversions[0],
+          defaultDetailCategory.conversions[0])));
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
