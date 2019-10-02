@@ -1,16 +1,40 @@
-# my_unit_converter
+# MY_UNIT_CONVERTER
 
-A new Flutter project.
+Clone unit converter application from udacity course with some enhancement.
 
-## Getting Started
+## Feature
 
-This project is a starting point for a Flutter application.
+  - Get data from API
+  - Unit conversion
+  - Handle request error
+  - BLoC design pattern apply
 
-A few resources to get you started if this is your first Flutter project:
+## Tech
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+* [BLOC & FLUTTER_BLOC](https://github.com/felangel/bloc/) -- A predictable state management library from Felix Angelov.
+* [JSON SERIALIZABLE](https://github.com/dart-lang/json_serializable) -- Generates utilities to aid in serializing to/from JSON.
+* [DIO](https://github.com/flutterchina/dio) -- A powerful Http client for Dart.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## API
+
+  - Get category
+```js
+// GET REQUEST
+https://private-f5e97-myunitconverter.apiary-mock.com/backdropList
+```
+
+  - Get detail cateogry
+```js
+// POST REQUEST
+// BODY
+{
+  "AParam": "AValue",
+  "BParam": [
+    "BValue1",
+    "BValue",
+    "BValue3",
+    "BValue4"
+  ]
+}
+https://private-f5e97-myunitconverter.apiary-mock.com/fake/conversions
+```
