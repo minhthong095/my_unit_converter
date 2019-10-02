@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_unit_converter/bloc/change_category/bloc_change_category.dart';
 import 'package:my_unit_converter/bloc/change_category/state_change_category.dart';
 import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
+import 'package:my_unit_converter/bloc/converter/event_converter.dart';
 import 'package:my_unit_converter/model_response/model_backdrop_response.dart';
 import 'package:my_unit_converter/model_response/model_conversion_response.dart';
 import 'package:my_unit_converter/tool/lodash.dart';
@@ -23,13 +24,13 @@ class ExchangeApp extends StatelessWidget {
     final defaultDetailCategory = Lodash.find(units, (model) {
       return model.name == data[defaultIndex].title;
     });
+    final blocConverter =
+        BlocConverter(defaultDetailCategory: defaultDetailCategory);
     return new MaterialApp(
         theme: ThemeData(fontFamily: 'Raleway'),
         home: MultiBlocProvider(
           providers: [
-            BlocProvider<BlocConverter>(
-                builder: (context) => BlocConverter(
-                    defaultDetailCategory: defaultDetailCategory)),
+            BlocProvider<BlocConverter>(builder: (context) => blocConverter),
             BlocProvider<BlocChangeCategory>(
                 builder: (context) => BlocChangeCategory(
                     data: data,
@@ -64,26 +65,34 @@ class _ExchangeAppState extends State<$ExchangeApp> {
   @override
   Widget build(BuildContext context) {
     return Container(
-          color: Colors.white,
-          child: SafeArea(
-            top: false,
-            child: BlocBuilder<BlocChangeCategory, StateChangeCategory>(
-              builder: (context, state) {
-                print("BUILD BACKDROP " + state.toString());
-                return Backdrop(
-                  backdropTitlePanelOn: 'Unit Converter',
-                  backdropTitlePanelOff: 'Select a Category',
-                  backTitleColor: state.category.color,
-                  panelTitle: state.category.title,
-                  backdrop: ListConverter(
-                    data: widget.data,
-                    cateogry: state.category,
-                  ),
-                  panel: Converter(units: state.detailCategory.conversions),
-                );
-              },
-            ),
+      color: Colors.white,
+      child: SafeArea(
+        top: false,
+        child: BlocListener<BlocChangeCategory, StateChangeCategory>(
+          listener: (context, state) {
+            blocConverter.dispatch(ForceUpdateAll(
+                newInput: "",
+                outputConversion: state.detailCategory.conversions[0],
+                inputConversion: state.detailCategory.conversions[0]));
+          },
+          child: BlocBuilder<BlocChangeCategory, StateChangeCategory>(
+            builder: (context, state) {
+              print("BUILD BACKDROP " + state.toString());
+              return Backdrop(
+                backdropTitlePanelOn: 'Unit Converter',
+                backdropTitlePanelOff: 'Select a Category',
+                backTitleColor: state.category.color,
+                panelTitle: state.category.title,
+                backdrop: ListConverter(
+                  data: widget.data,
+                  cateogry: state.category,
+                ),
+                panel: Converter(units: state.detailCategory.conversions),
+              );
+            },
           ),
-        );
+        ),
+      ),
+    );
   }
 }

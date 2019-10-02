@@ -28,6 +28,7 @@ class _ConverterState extends State<Converter> {
           child: Column(
             children: <Widget>[
               _InputOutputForm(
+                newInput: "", // Default after rebuild
                 title: 'Input',
               ),
               SizedBox(

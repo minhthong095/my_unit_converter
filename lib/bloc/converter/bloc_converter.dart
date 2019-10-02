@@ -15,8 +15,8 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
   @override
   StateConverter get initialState => ConverterUpdated(
       outcome: "",
-      converter: (ModelConverter("", defaultDetailCategory.conversions[0],
-          defaultDetailCategory.conversions[0])));
+      converter: ModelConverter("", defaultDetailCategory.conversions[0],
+          defaultDetailCategory.conversions[0]));
 
   @override
   Stream<StateConverter> mapEventToState(EventConverter event) async* {
@@ -36,7 +36,7 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
       unitFrom = event.inputConversion;
     else if (event is UpdateOutputType)
       unitTo = event.outputConversion;
-    else if (event is InitTypes) {
+    else if (event is ForceUpdateAll) {
       input = event.newInput;
       unitFrom = event.inputConversion;
       unitTo = event.outputConversion;
