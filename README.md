@@ -2,6 +2,10 @@
 
 Clone unit converter application from udacity course with some enhancement.
 
+![](gif_demo/demo.gif)
+![](gif_demo/failed.gif)
+![](gif_demo/converting.gif)
+
 ## Feature
 
   - Get data from API
