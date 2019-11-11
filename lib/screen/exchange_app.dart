@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' as prefix0;
 
 import 'package:flutter/material.dart';
@@ -77,17 +78,19 @@ class _ExchangeAppState extends State<$ExchangeApp> {
           },
           child: BlocBuilder<BlocChangeCategory, StateChangeCategory>(
             builder: (context, state) {
-              print("BUILD BACKDROP " + state.toString());
-              return Backdrop(
-                backdropTitlePanelOn: 'Unit Converter',
-                backdropTitlePanelOff: 'Select a Category',
-                backTitleColor: state.category.color,
-                panelTitle: state.category.title,
-                backdrop: ListConverter(
-                  data: widget.data,
-                  cateogry: state.category,
+              // print("BUILD BACKDROP " + state.toString());
+              return InheritedHidePanelCallback(
+                child: Backdrop(
+                  backdropTitlePanelOn: 'Unit Converter',
+                  backdropTitlePanelOff: 'Select a Category',
+                  backTitleColor: state.category.color,
+                  panelTitle: state.category.title,
+                  backdrop: ListConverter(
+                    data: widget.data,
+                    cateogry: state.category,
+                  ),
+                  panel: Converter(units: state.detailCategory.conversions),
                 ),
-                panel: Converter(units: state.detailCategory.conversions),
               );
             },
           ),
@@ -95,4 +98,53 @@ class _ExchangeAppState extends State<$ExchangeApp> {
       ),
     );
   }
+}
+
+// class BackdropState extends StatefulWidget {
+//   final Widget child;
+
+//   BackdropState({@required this.child});
+
+//   @override
+//   _StateBackdropState createState() => _StateBackdropState();
+// }
+
+// class _StateBackdropState extends State<BackdropState> {
+
+//   @override
+//   void dispose() {
+//     print("_StateBackdropState dispose");
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) => InheritedHidePanelCallback(
+//         state: this,
+//         child: widget.child,
+//       );
+// }
+
+// class InheritedHidePanelCallback extends InheritedWidget {
+//   _StateBackdropState backdropState;
+
+//   InheritedHidePanelCallback(
+//       {@required _StateBackdropState state, @required child})
+//       : super(child: child);
+
+//   @override
+//   bool updateShouldNotify(InheritedWidget oldWidget) => true;
+// }
+
+class InheritedHidePanelCallback extends InheritedWidget {
+  VoidCallback hidePanelCallback;
+
+  InheritedHidePanelCallback({@required child}) : super(child: child);
+
+  static InheritedHidePanelCallback of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(InheritedHidePanelCallback)
+        as InheritedHidePanelCallback);
+  }
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) => true;
 }

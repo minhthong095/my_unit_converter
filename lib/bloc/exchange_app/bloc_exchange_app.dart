@@ -61,7 +61,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
         yield InitData(
             backdropResponse: all[0].data, conversionResponse: all[1].data);
       } catch (e) {
-        print(e);
+        // print(e);
         _blocAlertFailed.dispatch(EventAlertFailed());
         yield InitFailed(e: e);
       }

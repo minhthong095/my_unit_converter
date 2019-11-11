@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_unit_converter/screen/exchange_app.dart';
 
 class Backdrop extends StatefulWidget {
   final Widget backdrop;
@@ -39,9 +40,8 @@ class _BackdropState extends State<Backdrop>
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -80,14 +80,20 @@ class _BackdropState extends State<Backdrop>
   }
 
   void _toggleHamburgerBtn() {
+    _hidePanelCallback();
     if (_controller.status == AnimationStatus.dismissed) // at begining
       _controller.fling(velocity: 1);
     else
       _controller.fling(velocity: -1);
   }
 
+  void _hidePanelCallback() {
+    InheritedHidePanelCallback.of(context).hidePanelCallback();
+  }
+
   Widget _buildPanelTitle() => InkWell(
         onTap: () {
+          _hidePanelCallback();
           _toggleHamburgerBtn();
         },
         child: Container(

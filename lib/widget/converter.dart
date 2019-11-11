@@ -4,6 +4,7 @@ import 'package:my_unit_converter/bloc/converter/bloc_converter.dart';
 import 'package:my_unit_converter/bloc/converter/event_converter.dart';
 import 'package:my_unit_converter/bloc/converter/state_converter.dart';
 import 'package:my_unit_converter/model_response/model_mini_conversion_response.dart';
+import 'package:my_unit_converter/screen/exchange_app.dart';
 
 class Converter extends StatefulWidget {
   final List<ModelMiniConversionResponse> units;
@@ -16,10 +17,12 @@ class Converter extends StatefulWidget {
 
 class _ConverterState extends State<Converter> {
   @override
-  Widget build(BuildContext context) {
-    final b = widget.units;
-    print("BUILD CONVERTER");
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       child: SingleChildScrollView(
         child: Container(
@@ -91,7 +94,7 @@ class _DropDownFormState extends State<_DropDownForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<BlocConverter, StateConverter>(
       builder: (context, state) {
-        print("BUILD DROPDOWN FORM");
+        // print("BUILD DROPDOWN FORM");
         return Container(
             width: double.infinity,
             height: 60,
@@ -160,8 +163,19 @@ class _InputOutputFormState extends State<_InputOutputForm> {
   }
 
   @override
+  void didChangeDependencies() {
+    InheritedHidePanelCallback.of(context).hidePanelCallback =
+        _hidePanelCallback;
+    super.didChangeDependencies();
+  }
+
+  void _hidePanelCallback() {
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("BUILD INOUT FORM");
+    // print("BUILD INOUT FORM");
     return Container(
       child: TextField(
         enabled: widget.enabledField,

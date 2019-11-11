@@ -25,7 +25,7 @@ class _ListConverterState extends State<ListConverter> {
 
   @override
   Widget build(BuildContext context) {
-    print("BUILD LIST CONVERTER");
+    // print("BUILD LIST CONVERTER");
     return Scaffold(
       backgroundColor: widget.cateogry.color,
       body: ListView.builder(

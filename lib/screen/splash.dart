@@ -108,7 +108,7 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
       },
       child: BlocListener<BlocExchangeApp, StateExchangeApp>(
         listener: (context, state) {
-          print("IMPACT");
+          // print("IMPACT");
           if (state is InitData)
             Navigator.of(context).pushAndRemoveUntil(
                 TransitionBotTop(
