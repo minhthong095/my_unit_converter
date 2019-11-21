@@ -39,21 +39,12 @@ class _ConverterState extends State<Converter> {
               ),
               _DropDownForm(data: widget.units),
               SizedBox(
-                height: 40,
-              ),
-              Image.asset(
-                'assets/images/arrow.png',
-                scale: 12,
-              ),
-              SizedBox(
-                height: 40,
+                height: 100,
               ),
               BlocBuilder<BlocConverter, StateConverter>(
                 builder: (context, state) {
                   return _InputOutputForm(
-                      title: 'Output',
-                      enabledField: false,
-                      newInput: state.outcome);
+                      enabledField: false, newInput: state.outcome);
                 },
               ),
               SizedBox(
@@ -134,7 +125,7 @@ class _InputOutputForm extends StatefulWidget {
   final bool enabledField;
 
   const _InputOutputForm(
-      {@required this.title, this.enabledField = true, this.newInput});
+      {this.title = '', this.enabledField = true, this.newInput});
 
   @override
   _InputOutputFormState createState() => _InputOutputFormState();
@@ -177,6 +168,7 @@ class _InputOutputFormState extends State<_InputOutputForm> {
   Widget build(BuildContext context) {
     // print("BUILD INOUT FORM");
     return Container(
+      color: widget.enabledField ? null : Colors.grey[100],
       child: TextField(
         enabled: widget.enabledField,
         controller: _controller,

@@ -30,7 +30,9 @@ class _BackdropState extends State<Backdrop>
   final double _dividerHeight = 1.0;
 
   AnimationController _controller;
-  bool test = false;
+  bool isPanelUp = true; // default up
+  double _dyStart = 0;
+  double _dyMove = 0;
 
   @override
   void initState() {
@@ -57,7 +59,7 @@ class _BackdropState extends State<Backdrop>
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-            onPressed: _toggleHamburgerBtn,
+            onPressed: _toggleOnOffPane,
             icon: AnimatedIcon(
               icon: AnimatedIcons.menu_close,
               progress: _controller,
@@ -79,12 +81,11 @@ class _BackdropState extends State<Backdrop>
     );
   }
 
-  void _toggleHamburgerBtn() {
-    _hidePanelCallback();
-    if (_controller.status == AnimationStatus.dismissed) // at begining
-      _controller.fling(velocity: 1);
+  void _toggleOnOffPane() {
+    if (isPanelUp)
+      _movePanelDown();
     else
-      _controller.fling(velocity: -1);
+      _movePanelUp();
   }
 
   void _hidePanelCallback() {
@@ -93,8 +94,7 @@ class _BackdropState extends State<Backdrop>
 
   Widget _buildPanelTitle() => InkWell(
         onTap: () {
-          _hidePanelCallback();
-          _toggleHamburgerBtn();
+          _toggleOnOffPane();
         },
         child: Container(
             padding: EdgeInsets.only(left: 20),
@@ -102,6 +102,68 @@ class _BackdropState extends State<Backdrop>
             constraints: BoxConstraints.expand(height: _panelTitleHeight),
             child: Text(widget.panelTitle, style: TextStyle(fontSize: 25))),
       );
+
+  void _movePanelUp() {
+    _controller.fling(velocity: -1);
+    _hidePanelCallback();
+    isPanelUp = true;
+  }
+
+  void _movePanelDown() {
+    _controller.fling(velocity: 1);
+    _hidePanelCallback();
+    isPanelUp = false;
+  }
+
+  void _onDragStart(DragStartDetails dragStart) {
+    _dyStart = dragStart.localPosition.dy;
+  }
+
+  void _countDyMove(DragUpdateDetails dragUpdateDetails) {
+    _dyMove = (_dyStart - dragUpdateDetails.localPosition.dy) * 0.001;
+  }
+
+  void _moveUpWhenSmallerThan(double value) {
+    print('CONTROL VALUE ' + _controller.value.toString());
+    if (_controller.value < value)
+      _movePanelUp();
+    else
+      _movePanelDown();
+  }
+
+  Widget _wrapDragBehavior(Widget child) {
+    return GestureDetector(
+      onVerticalDragStart: _onDragStart,
+      onVerticalDragEnd: (dragEndDetail) {
+        _moveUpWhenSmallerThan(0.05);
+      },
+      onVerticalDragUpdate: (DragUpdateDetails dragUpdate) {
+        _countDyMove(dragUpdate);
+        _controller.value = -_dyMove;
+      },
+      child: child,
+    );
+  }
+
+  Widget _wrapPanelTitleDragBehavior(Widget child) {
+    return GestureDetector(
+      onVerticalDragStart: _onDragStart,
+      onVerticalDragEnd: (dragEndDetail) {
+        if (isPanelUp)
+          _moveUpWhenSmallerThan(0.05);
+        else
+          _moveUpWhenSmallerThan(0.95);
+      },
+      onVerticalDragUpdate: (DragUpdateDetails dragUpdate) {
+        _countDyMove(dragUpdate);
+        if (isPanelUp)
+          _controller.value = -_dyMove;
+        else
+          _controller.value = 1 - _dyMove;
+      },
+      child: child,
+    );
+  }
 
   Widget _buildPanel() => PositionedTransition(
         rect: _anmiationPanel.animate(_controller),
@@ -111,13 +173,11 @@ class _BackdropState extends State<Backdrop>
               borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
           child: Column(
             children: <Widget>[
-              _buildPanelTitle(),
+              _wrapPanelTitleDragBehavior(_buildPanelTitle()),
               Divider(
                 height: _dividerHeight,
               ),
-              Expanded(
-                child: widget.panel,
-              )
+              Expanded(child: _wrapDragBehavior(widget.panel))
             ],
           ),
         ),
