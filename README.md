@@ -3,8 +3,9 @@
 Clone unit converter application from udacity course with some enhancement.
 
 ![](gif_demo/demo.gif)
-![](gif_demo/failed.gif)
+![](gif_demo/drag.gif)
 ![](gif_demo/converting.gif)
+![](gif_demo/failed.gif)
 
 ## Feature
 

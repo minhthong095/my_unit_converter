@@ -50,7 +50,7 @@ class _BackdropState extends State<Backdrop>
   void didUpdateWidget(Backdrop oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Always go up again when user choose category.
-    _controller.fling(velocity: -1);
+    _movePanelUp();
   }
 
   @override
