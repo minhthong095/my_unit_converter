@@ -12,8 +12,7 @@ class ModelMiniConversionResponse extends Equatable {
   @JsonKey(name: 'base_unit', defaultValue: false, nullable: true)
   final bool baseUnit;
 
-  ModelMiniConversionResponse({this.name, this.conversion, this.baseUnit})
-      : super([name, conversion, baseUnit]);
+  ModelMiniConversionResponse({this.name, this.conversion, this.baseUnit});
 
   factory ModelMiniConversionResponse.fromJson(Map<String, dynamic> json) =>
       ModelMiniConversionResponse(
@@ -27,4 +26,7 @@ class ModelMiniConversionResponse extends Equatable {
         'conversion': this.conversion,
         'base_unit': this.baseUnit,
       };
+
+  @override
+  List<Object> get props => [name, conversion, baseUnit];
 }

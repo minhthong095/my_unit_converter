@@ -25,7 +25,7 @@ class BlocConverter extends Bloc<EventConverter, StateConverter> {
 
   Stream<ConverterUpdated> _runModifyThing(EventConverter event) async* {
     // Formula: (mile(input) / mile(origin)) * yard(origin) = yard(output)
-    final currentConverter = (currentState).converter;
+    final currentConverter = (state).converter;
     String input = currentConverter.valueInput;
     ModelMiniConversionResponse unitFrom = currentConverter.conversionFrom;
     ModelMiniConversionResponse unitTo = currentConverter.conversionTo;

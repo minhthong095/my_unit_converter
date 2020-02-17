@@ -40,7 +40,7 @@ class _FailedAlert extends State<AlertFailed>
     _animation = _tweenPosition.animate(_controller);
 
     _blocAlertFailed = BlocProvider.of<BlocAlertFailed>(context);
-    _listenerAlertFailed = _blocAlertFailed.state.listen((state) {
+    _listenerAlertFailed = _blocAlertFailed.listen((state) {
       if (state is prefix0.OnAlertFailed) _controller.forward();
     });
 

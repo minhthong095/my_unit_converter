@@ -31,9 +31,11 @@ class ExchangeApp extends StatelessWidget {
         theme: ThemeData(fontFamily: 'Raleway'),
         home: MultiBlocProvider(
           providers: [
-            BlocProvider<BlocConverter>(builder: (context) => blocConverter),
+            BlocProvider<BlocConverter>(
+              create: (context) => blocConverter,
+            ),
             BlocProvider<BlocChangeCategory>(
-                builder: (context) => BlocChangeCategory(
+                create: (context) => BlocChangeCategory(
                     data: data,
                     defaultIndex: defaultIndex,
                     units: units,
@@ -71,7 +73,7 @@ class _ExchangeAppState extends State<$ExchangeApp> {
         top: false,
         child: BlocListener<BlocChangeCategory, StateChangeCategory>(
           listener: (context, state) {
-            blocConverter.dispatch(ForceUpdateAll(
+            blocConverter.add(ForceUpdateAll(
                 newInput: "",
                 outputConversion: state.detailCategory.conversions[0],
                 inputConversion: state.detailCategory.conversions[0]));

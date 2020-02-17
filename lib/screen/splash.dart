@@ -33,9 +33,9 @@ class _ProviderSplash extends State<Splash> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<BlocAlertFailed>(builder: (context) => _blocAlertFailed),
+        BlocProvider<BlocAlertFailed>(create: (context) => _blocAlertFailed),
         BlocProvider<BlocExchangeApp>(
-            builder: (context) => BlocExchangeApp(_blocAlertFailed)),
+            create: (context) => BlocExchangeApp(_blocAlertFailed)),
       ],
       child: _$Splash(),
     );
@@ -95,7 +95,7 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
   }
 
   void _fetchData() {
-    _blocExchangeApp.dispatch(Init(tempBodyForConversion: _tempBody));
+    _blocExchangeApp.add(Init(tempBodyForConversion: _tempBody));
   }
 
   @override

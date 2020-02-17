@@ -97,15 +97,16 @@ class _DropDownFormState extends State<_DropDownForm> {
                   hint: Text('Choose'),
                   onChanged: (ModelMiniConversionResponse conversion) {
                     widget.bSide
-                        ? blocConverter.dispatch(
-                            UpdateOutputType(outputConversion: conversion))
-                        : blocConverter.dispatch(
-                            UpdateInputType(inputConversion: conversion));
+                        ? blocConverter
+                            .add(UpdateOutputType(outputConversion: conversion))
+                        : blocConverter
+                            .add(UpdateInputType(inputConversion: conversion));
                   },
                   value: widget.bSide
                       ? state.converter.conversionTo
                       : state.converter.conversionFrom,
                   items: widget.data.map((value) {
+                    print('value $value');
                     return DropdownMenuItem<ModelMiniConversionResponse>(
                         value: value,
                         child: Text(
@@ -174,7 +175,7 @@ class _InputOutputFormState extends State<_InputOutputForm> {
         controller: _controller,
         style: TextStyle(fontSize: 30, color: Colors.black38),
         onChanged: (value) {
-          blocConverter.dispatch(UpdateInput(newInput: value));
+          blocConverter.add(UpdateInput(newInput: value));
         },
         decoration: InputDecoration(
             labelStyle: TextStyle(fontSize: 30, color: Colors.black38),

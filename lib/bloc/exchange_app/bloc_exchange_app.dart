@@ -20,12 +20,6 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
     yield* _initDataExchangeApp(event);
   }
 
-  @override
-  void dispose() {
-    print("DISPOSE BLOCEXCHANGE APP");
-    super.dispose();
-  }
-
   Stream<StateExchangeApp> _initDataExchangeApp(EventExchangeApp event) async* {
     if (event is Init) {
       try {
@@ -62,7 +56,7 @@ class BlocExchangeApp extends Bloc<EventExchangeApp, StateExchangeApp> {
             backdropResponse: all[0].data, conversionResponse: all[1].data);
       } catch (e) {
         // print(e);
-        _blocAlertFailed.dispatch(EventAlertFailed());
+        _blocAlertFailed.add(EventAlertFailed());
         yield InitFailed(e: e);
       }
     }
