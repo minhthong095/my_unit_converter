@@ -130,13 +130,15 @@ class _StateSplash extends State<_$Splash> with SingleTickerProviderStateMixin {
                       child: AnimatedBuilder(
                         animation: _opacityAnimation.animate(_controller),
                         builder: (context, child) {
-                          return Opacity(
-                              opacity: _controller.value,
-                              child: Image.asset(
-                                'assets/icons/flutter.png',
-                                width: 130,
-                                height: 130,
-                              ));
+                          return RepaintBoundary(
+                            child: Opacity(
+                                opacity: _controller.value,
+                                child: Image.asset(
+                                  'assets/icons/flutter.png',
+                                  width: 130,
+                                  height: 130,
+                                )),
+                          );
                         },
                       )),
                 ),
