@@ -20,11 +20,11 @@ dependencies:
   bloc:
   flutter_bloc:
   equatable:
-  analyzer: 0.38.2
-  http: ^0.12.0+2
+  analyzer: ">=0.38.2 <0.42.0"
+  http: ">=0.12.0+2 <0.14.0"
   json_annotation: ^3.0.0
   checked_yaml: 1.0.2
-  dio: 3.0.2
+  dio: ">=3.0.2 <6.0.0"
   flutter:
     sdk: flutter
 
